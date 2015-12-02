@@ -12,8 +12,8 @@ use PHP_GCM\Sender;
  * Class GoogleGcmSender
  * @package Genkgo\Push\Sender
  */
-final class GoogleGcmSender implements SenderInterface {
-
+final class GoogleGcmSender implements SenderInterface
+{
     /**
      * @var Sender
      */
@@ -27,7 +27,8 @@ final class GoogleGcmSender implements SenderInterface {
      * @param string $apiKey
      * @param int $retries
      */
-    public function __construct ($apiKey, $retries = 5) {
+    public function __construct($apiKey, $retries = 5)
+    {
         $this->sender = new Sender($apiKey);
         $this->retries = $retries;
     }
@@ -57,6 +58,5 @@ final class GoogleGcmSender implements SenderInterface {
             'title', (string) $message->getTitle()
         ]);
         $this->sender->sendMulti($gcmMessage, [$recipient->getToken()], $this->retries);
-
     }
 }

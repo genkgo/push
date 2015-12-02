@@ -5,8 +5,8 @@ namespace Genkgo\Push;
  * Interface SenderInterface
  * @package Genkgo\Push
  */
-interface SenderInterface {
-
+interface SenderInterface
+{
     /**
      * @param Message $message
      * @param RecipientInterface $recipient
@@ -19,6 +19,5 @@ interface SenderInterface {
      * @param RecipientInterface $recipient
      * @return void
      */
-    public function send (Message $message, RecipientInterface $recipient);
-
+    public function send(Message $message, RecipientInterface $recipient);
 }

@@ -12,9 +12,10 @@ use Genkgo\Push\Sender\WindowsSender;
  * Class AppleApnSender
  * @package Genkgo\Push\Sender
  */
-class WindowsSenderTest extends AbstractTestCase {
-
-    public function testSupports () {
+class WindowsSenderTest extends AbstractTestCase
+{
+    public function testSupports()
+    {
         $message = new Message(new Body('test'));
         $recipient = new WindowsDeviceRecipient('token');
 
@@ -22,12 +23,12 @@ class WindowsSenderTest extends AbstractTestCase {
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
-    public function testNotSupports () {
+    public function testNotSupports()
+    {
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
         $sender = new WindowsSender();
         $this->assertFalse($sender->supports($message, $recipient));
     }
-
 }

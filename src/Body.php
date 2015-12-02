@@ -5,8 +5,8 @@ namespace Genkgo\Push;
  * Class Body
  * @package Genkgo\Push
  */
-final class Body {
-
+final class Body
+{
     /**
      * @var string
      */
@@ -15,15 +15,16 @@ final class Body {
     /**
      * @param string $body
      */
-    public function __construct ($body) {
+    public function __construct($body)
+    {
         $this->body = $body;
     }
 
     /**
      * @return string
      */
-    public function __toString () {
+    public function __toString()
+    {
         return $this->body;
     }
-
 }

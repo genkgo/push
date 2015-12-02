@@ -8,9 +8,10 @@ use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\Sender\GoogleGcmSender;
 
-class GoogleGcmSenderTest extends AbstractTestCase {
-
-    public function testSupports () {
+class GoogleGcmSenderTest extends AbstractTestCase
+{
+    public function testSupports()
+    {
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');
 
@@ -18,12 +19,12 @@ class GoogleGcmSenderTest extends AbstractTestCase {
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
-    public function testNotSupports () {
+    public function testNotSupports()
+    {
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
         $sender = new GoogleGcmSender('key');
         $this->assertFalse($sender->supports($message, $recipient));
     }
-
 }

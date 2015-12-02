@@ -1,11 +1,10 @@
 <?php
 namespace Genkgo\Push;
 
-interface RecipientInterface {
-
+interface RecipientInterface
+{
     /**
      * @return string
      */
     public function getToken();
-
 }

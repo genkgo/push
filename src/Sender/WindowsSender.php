@@ -11,8 +11,8 @@ use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
  * Class WindowsSender
  * @package Genkgo\Push\Sender
  */
-final class WindowsSender implements SenderInterface {
-
+final class WindowsSender implements SenderInterface
+{
     /**
      * @var WindowsPhonePushNotification
      */
@@ -21,7 +21,8 @@ final class WindowsSender implements SenderInterface {
     /**
      *
      */
-    public function __construct () {
+    public function __construct()
+    {
         $this->connection = new WindowsPhonePushNotification();
     }
 

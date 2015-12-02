@@ -7,8 +7,8 @@ use Genkgo\Push\RecipientInterface;
  * Class AppleDeviceRecipient
  * @package Genkgo\Push\Recipient
  */
-final class AndroidDeviceRecipient implements RecipientInterface {
-
+final class AndroidDeviceRecipient implements RecipientInterface
+{
     /**
      * @var string
      */
@@ -17,7 +17,8 @@ final class AndroidDeviceRecipient implements RecipientInterface {
     /**
      * @param string $token
      */
-    public function __construct ($token) {
+    public function __construct($token)
+    {
         $this->token = $token;
     }
 
@@ -28,6 +29,4 @@ final class AndroidDeviceRecipient implements RecipientInterface {
     {
         return $this->token;
     }
-
-
 }

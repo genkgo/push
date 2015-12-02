@@ -5,8 +5,8 @@ namespace Genkgo\Push;
  * Class Message
  * @package Genkgo\Push
  */
-final class Message {
-
+final class Message
+{
     /**
      * @var Body
      */
@@ -19,7 +19,8 @@ final class Message {
     /**
      * @param Body $body
      */
-    public function __construct (Body $body) {
+    public function __construct(Body $body)
+    {
         $this->body = $body;
     }
 
@@ -60,5 +61,4 @@ final class Message {
         $clone->title = $title;
         return $clone;
     }
-
 }

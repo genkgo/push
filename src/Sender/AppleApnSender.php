@@ -14,8 +14,8 @@ use Genkgo\Push\SenderInterface;
  * Class AppleApnSender
  * @package Genkgo\Push\Sender
  */
-final class AppleApnSender implements SenderInterface {
-
+final class AppleApnSender implements SenderInterface
+{
     /**
      * @var Connection
      */
@@ -26,7 +26,8 @@ final class AppleApnSender implements SenderInterface {
      * @param $passphrase
      * @param bool|false $sandboxMode
      */
-    public function __construct ($certificate, $passphrase, $sandboxMode = false) {
+    public function __construct($certificate, $passphrase, $sandboxMode = false)
+    {
         $this->connection = new Connection(new Certificate($certificate, $passphrase), $sandboxMode);
     }
 
