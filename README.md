@@ -7,7 +7,7 @@ Requires PHP 5.6 or later. There are no plans to support PHP 5.5 or earlier. PRs
 
 ### Quality
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/genkgo/push/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/genkgo/push/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/genkgo/push/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/genkgo/push/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/genkgo/push/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/genkgo/push/)
 [![Build Status](https://travis-ci.org/genkgo/push.png?branch=master)](https://travis-ci.org/genkgo/push)
 
