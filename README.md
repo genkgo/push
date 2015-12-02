@@ -29,16 +29,12 @@ use Genkgo\Push\Gateway;
 use Genkgo\Push\Sender\GoogleGcmSender;
 use Genkgo\Push\Sender\AppleApnSender;
 use Genkgo\Push\Sender\WindowsSender;
-use PHP_GCM\Sender;
-use Apple\ApnPush\Certificate\Certificate;
-use Apple\ApnPush\Notification\Connection;
-use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
 
-// construct the gateway, using the different senders (using other composer packages)
+// construct the gateway, using the different senders
 $gateway = new Gateway([
-    new GoogleGcmSender(new Sender('API key obtained through the Google API Console'),
-    new AppleApnSender(new Connection(new Certificate('/location/to/cert.pem', 'passphrase'))),
-    new WindowsSender(new WindowsPhonePushNotification())
+    new GoogleGcmSender('API key obtained through the Google API Console'),
+    new AppleApnSender('/location/to/cert.pem', 'passphrase'),
+    new WindowsSender()
 ]);
 
 // below message will automatically go to their own specific sender

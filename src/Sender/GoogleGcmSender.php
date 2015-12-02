@@ -24,11 +24,11 @@ final class GoogleGcmSender implements SenderInterface {
     private $retries;
 
     /**
-     * @param Sender $sender
+     * @param string $apiKey
      * @param int $retries
      */
-    public function __construct (Sender $sender, $retries = 5) {
-        $this->sender = $sender;
+    public function __construct ($apiKey, $retries = 5) {
+        $this->sender = new Sender($apiKey);
         $this->retries = $retries;
     }
 

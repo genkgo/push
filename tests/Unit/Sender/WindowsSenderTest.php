@@ -7,7 +7,6 @@ use Genkgo\Push\Message;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\Recipient\WindowsDeviceRecipient;
 use Genkgo\Push\Sender\WindowsSender;
-use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
 
 /**
  * Class AppleApnSender
@@ -16,20 +15,18 @@ use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
 class WindowsSenderTest extends AbstractTestCase {
 
     public function testSupports () {
-        $connection = new WindowsPhonePushNotification();
         $message = new Message(new Body('test'));
         $recipient = new WindowsDeviceRecipient('token');
 
-        $sender = new WindowsSender($connection);
+        $sender = new WindowsSender();
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
     public function testNotSupports () {
-        $connection = new WindowsPhonePushNotification();
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
-        $sender = new WindowsSender($connection);
+        $sender = new WindowsSender();
         $this->assertFalse($sender->supports($message, $recipient));
     }
 

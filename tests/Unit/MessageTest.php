@@ -3,13 +3,8 @@ namespace Genkgo\Push\Unit;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Body;
-use Genkgo\Push\Exception\UnsupportedMessageRecipient;
-use Genkgo\Push\Gateway;
 use Genkgo\Push\Message;
-use Genkgo\Push\Recipient\AndroidDeviceRecipient;
-use Genkgo\Push\SenderInterface;
 use Genkgo\Push\Title;
-use Symfony\Component\Yaml\Tests\B;
 
 class MessageTest extends AbstractTestCase {
 
@@ -34,12 +29,12 @@ class MessageTest extends AbstractTestCase {
         $title2 = new Title('new test');
 
         $message = new Message(new Body('test'));
-        $message = $message->setTitle($title1);
+        $message1 = $message->setTitle($title1);
 
-        $this->assertSame($title1, $message->getTitle());
+        $this->assertSame($title1, $message1->getTitle());
 
-        $message = $message->setTitle($title2);
-        $this->assertSame($title2, $message->getTitle());
+        $message2 = $message->setTitle($title2);
+        $this->assertSame($title2, $message2->getTitle());
     }
 
 }

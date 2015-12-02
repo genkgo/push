@@ -1,6 +1,7 @@
 <?php
 namespace Genkgo\Push\Sender;
 
+use Apple\ApnPush\Certificate\Certificate;
 use Apple\ApnPush\Notification\Connection;
 use Apple\ApnPush\Notification\Message as AppleMessage;
 use Apple\ApnPush\Notification\Notification;
@@ -21,10 +22,12 @@ class AppleApnSender implements SenderInterface {
     private $connection;
 
     /**
-     * @param Connection $connection
+     * @param $certificate
+     * @param $passphrase
+     * @param bool|false $sandboxMode
      */
-    public function __construct (Connection $connection) {
-        $this->connection = $connection;
+    public function __construct ($certificate, $passphrase, $sandboxMode = false) {
+        $this->connection = new Connection(new Certificate($certificate, $passphrase), $sandboxMode);
     }
 
     /**
