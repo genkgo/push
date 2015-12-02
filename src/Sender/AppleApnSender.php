@@ -14,7 +14,7 @@ use Genkgo\Push\SenderInterface;
  * Class AppleApnSender
  * @package Genkgo\Push\Sender
  */
-class AppleApnSender implements SenderInterface {
+final class AppleApnSender implements SenderInterface {
 
     /**
      * @var Connection

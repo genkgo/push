@@ -11,7 +11,7 @@ use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
  * Class WindowsSender
  * @package Genkgo\Push\Sender
  */
-class WindowsSender implements SenderInterface {
+final class WindowsSender implements SenderInterface {
 
     /**
      * @var WindowsPhonePushNotification
