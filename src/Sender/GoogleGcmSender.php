@@ -52,7 +52,10 @@ final class GoogleGcmSender implements SenderInterface {
     {
         $randomCollapse = rand(11, 100);
 
-        $gcmMessage = new GcmMessage("{$randomCollapse}", $message->getBody());
+        $gcmMessage = new GcmMessage("{$randomCollapse}", [
+            'message' => (string) $message->getBody(),
+            'title', (string) $message->getTitle()
+        ]);
         $this->sender->sendMulti($gcmMessage, [$recipient->getToken()], $this->retries);
 
     }

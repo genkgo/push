@@ -48,7 +48,7 @@ class AppleApnSender implements SenderInterface {
     public function send(Message $message, RecipientInterface $recipient)
     {
         $appleMessage = new AppleMessage();
-        $appleMessage->setBody($message->getBody());
+        $appleMessage->setBody((string) $message->getBody());
         $appleMessage->setDeviceToken($recipient->getToken());
 
         $notification = new Notification($this->connection);

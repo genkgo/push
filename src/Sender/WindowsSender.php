@@ -42,6 +42,10 @@ class WindowsSender implements SenderInterface {
      */
     public function send(Message $message, RecipientInterface $recipient)
     {
-        $this->connection->pushToast($recipient->getToken(), $message->getTitle(), $message->getBody());
+        $this->connection->pushToast(
+            $recipient->getToken(),
+            (string) $message->getTitle(),
+            (string) $message->getBody()
+        );
     }
 }
