@@ -1,6 +1,6 @@
 {
     "name" : "genkgo/push",
-    "description": "Push to all specific platforms",
+    "description": "Send push messages to Android, Apple and Windows using one interface ",
     "require" : {
         "php" : ">=5.6",
         "jildertmiedema/windows-phone-push": "~0.0.1",
