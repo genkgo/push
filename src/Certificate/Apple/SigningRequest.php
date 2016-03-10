@@ -42,10 +42,13 @@ final class SigningRequest
     private function generate()
     {
         if ($this->request === null) {
+            $commonName = iconv("UTF-8", "ASCII//TRANSLIT", $this->commonName);
+            $privateKeyResource = $this->privateKey->asResource();
+
             $csr = openssl_csr_new([
-                'CN' => $this->commonName,
+                'CN' => $commonName,
                 'emailAddress' => $this->emailAddress
-            ], $this->privateKey->asResource());
+            ], $privateKeyResource);
 
             $this->request = $csr;
         }
