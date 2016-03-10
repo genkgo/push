@@ -20,7 +20,7 @@ you notice compliance oversights, please send a patch via pull request.
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
-## Getting Started
+## Send Push Messages
 
 
 ```php
@@ -41,6 +41,22 @@ $gateway = new Gateway([
 $gateway->send(new Message(new Body('message content')), new AndroidDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new AppleDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new WindowsDeviceRecipient('token'));
+```
+
+## Generate Apple Push Certificate
+
+
+```php
+<?php
+use Genkgo\Push\Certificate\Apple\Generator;
+use Genkgo\Push\Certificate\Apple\PortalConnection;
+use Genkgo\Push\Certificate\Apple\PushCertificate;
+use Genkgo\Push\Certificate\Apple\Type;
+use GuzzleHttp\Client;
+
+$generator = new Generator(new PortalConnection(new Client(), $appleId, $password, $teamId));
+$pushCertificate = $generator->generate(new Type(Type::DEVELOPMENT), 'your app identifier');
+file_put_contents('location/to/file.pem', (string) $pushCertificate);
 ```
 
 ## Contributing
