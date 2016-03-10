@@ -28,4 +28,15 @@ class SigningRequestTest extends AbstractTestCase
 
         $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string) $request);
     }
+
+    public function testTooLongCommonName()
+    {
+        $request = new SigningRequest(
+            new PrivateKey(),
+            'String Of More Than 64 Characters Is Troubling OpenSSL Because RFC Says 64 Is The Max',
+            'email@address.com'
+        );
+
+        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string) $request);
+    }
 }

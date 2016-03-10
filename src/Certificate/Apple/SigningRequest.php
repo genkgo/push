@@ -46,7 +46,7 @@ final class SigningRequest
             $privateKeyResource = $this->privateKey->asResource();
 
             $csr = openssl_csr_new([
-                'CN' => $commonName,
+                'CN' => substr($commonName, 0, 64),
                 'emailAddress' => $this->emailAddress
             ], $privateKeyResource);
 
