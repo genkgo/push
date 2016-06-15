@@ -29,4 +29,13 @@ final class AndroidDeviceRecipient implements RecipientInterface
     {
         return $this->token;
     }
+
+    /**
+     * @param $token
+     * @return RecipientInterface
+     */
+    public static function fromString($token)
+    {
+        return new self($token);
+    }
 }
