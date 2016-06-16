@@ -51,9 +51,7 @@ final class AppleApnSender implements SenderInterface
         $appleMessage = new AppleMessage();
         $appleMessage->setBody((string) $message->getBody());
         $appleMessage->setDeviceToken($recipient->getToken());
-        if ($message->getIdentifier()) {
-            $appleMessage->setIdentifier($message->getIdentifier());
-        }
+        $appleMessage->setExtra($message->getExtra());
 
         $notification = new Notification($this->connection);
         $notification->send($appleMessage);

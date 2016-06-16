@@ -14,14 +14,14 @@ class MessageTest extends AbstractTestCase
         $this->assertNotSame($message, $message->withTitle(new Title('test')));
     }
 
-    public function testGetterBody()
+    public function testBody()
     {
         $body = new Body('test');
         $message = new Message($body);
         $this->assertSame('test', (string) $message->getBody());
     }
 
-    public function testGetterSetterTitle()
+    public function testTitle()
     {
         $title1 = new Title('test');
         $title2 = new Title('new test');
@@ -35,18 +35,16 @@ class MessageTest extends AbstractTestCase
         $this->assertSame($title2, $message2->getTitle());
     }
 
-    public function testGetterSetterIdentifier()
+    public function testExtra()
     {
-        $identifier1 = 1;
-        $identifier2 = 2;
-
         $message = new Message(new Body('test'));
-        $message1 = $message->withIdentifier($identifier1);
+        $message1 = $message->withExtra('localId', 1);
+        $message2 = $message->withExtra('localId', 2);
+        $message3 = $message1->withExtra('more', 'data');
 
-        $this->assertSame($identifier1, $message1->getIdentifier());
-
-        $message2 = $message->withIdentifier($identifier2);
-        $this->assertSame($identifier1, $message1->getIdentifier());
-        $this->assertSame($identifier2, $message2->getIdentifier());
+        $this->assertCount(0, $message->getExtra());
+        $this->assertCount(1, $message1->getExtra());
+        $this->assertCount(1, $message2->getExtra());
+        $this->assertCount(2, $message3->getExtra());
     }
 }

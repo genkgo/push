@@ -16,9 +16,9 @@ final class Message
      */
     private $title;
     /**
-     * @var string
+     * @var array
      */
-    private $identifier;
+    private $extra = [];
 
     /**
      * @param Body $body
@@ -45,11 +45,11 @@ final class Message
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getIdentifier()
+    public function getExtra()
     {
-        return $this->identifier;
+        return $this->extra;
     }
 
     /**
@@ -64,17 +64,14 @@ final class Message
     }
 
     /**
-     * @param int $identifier
+     * @param $key
+     * @param $value
      * @return Message
      */
-    public function withIdentifier($identifier)
+    public function withExtra($key, $value)
     {
-        if (filter_var($identifier, FILTER_VALIDATE_INT) === false) {
-            throw new \InvalidArgumentException('Identifier must be an integer');
-        }
-
         $clone = clone $this;
-        $clone->identifier = $identifier;
+        $clone->extra[$key] = $value;
         return $clone;
     }
 }
