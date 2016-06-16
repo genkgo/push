@@ -71,7 +71,7 @@ final class PortalConnection
             $this->cookieJar = new CookieJar();
 
             $appIdKeyResponse = $this->client->get(
-                'https://developer.apple.com/membercenter/index.action',
+                'https://developer.apple.com/account/',
                 [
                     'allow_redirects' => false,
                     'cookies' => $this->cookieJar
