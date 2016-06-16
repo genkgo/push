@@ -137,7 +137,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
         $client->expects($this->at(0))
             ->method('__call')
             ->with('get', $this->callback(function ($arguments) {
-                $this->assertEquals($arguments[0], 'https://developer.apple.com/membercenter/index.action');
+                $this->assertEquals($arguments[0], 'https://developer.apple.com/account/');
                 return $arguments;
             }))
             ->willReturn(
