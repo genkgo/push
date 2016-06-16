@@ -15,6 +15,10 @@ final class Message
      * @var Title
      */
     private $title;
+    /**
+     * @var string
+     */
+    private $identifier;
 
     /**
      * @param Body $body
@@ -33,17 +37,6 @@ final class Message
     }
 
     /**
-     * @param Body $body
-     * @return Message
-     */
-    public function setBody(Body $body)
-    {
-        $clone = clone $this;
-        $clone->body = $body;
-        return $clone;
-    }
-
-    /**
      * @return Title
      */
     public function getTitle()
@@ -52,13 +45,32 @@ final class Message
     }
 
     /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
      * @param Title $title
      * @return Message
      */
-    public function setTitle(Title $title)
+    public function withTitle(Title $title)
     {
         $clone = clone $this;
         $clone->title = $title;
+        return $clone;
+    }
+
+    /**
+     * @param $identifier
+     * @return Message
+     */
+    public function withIdentifier($identifier)
+    {
+        $clone = clone $this;
+        $clone->identifier = $identifier;
         return $clone;
     }
 }
