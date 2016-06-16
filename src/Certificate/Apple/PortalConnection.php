@@ -2,6 +2,7 @@
 namespace Genkgo\Push\Certificate\Apple;
 
 use Genkgo\Push\Exception\ApplePortalException;
+use Genkgo\Push\Exception\ApplicationAlreadyHasPushCertificateException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 
@@ -39,6 +40,10 @@ final class PortalConnection
      * @var array
      */
     private $apps;
+    /**
+     * @var array
+     */
+    private $certificates;
 
     /**
      * @param Client $client
@@ -174,6 +179,48 @@ final class PortalConnection
     }
 
     /**
+     * @param Type $type
+     * @return array|CertificateDetails[]
+     * @throws ApplePortalException
+     */
+    public function fetchCertificates(Type $type)
+    {
+        $this->initialize();
+
+        if ($this->certificates === null) {
+            $this->certificates = [];
+            $pageSize = 500;
+            $pageNumber = 1;
+            do {
+                $certificatesResponse = json_decode((string) $this->client->post(
+                    'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/listCertRequests.action',
+                    [
+                        'cookies' => $this->cookieJar,
+                        'form_params' => [
+                            'teamId' => $this->teamId,
+                            'pageNumber' => $pageNumber,
+                            'pageSize' => $pageSize,
+                            'types' => (string) $type,
+                            'sort' => 'name=asc'
+                        ]
+                    ]
+                )->getBody(), true);
+
+                $pageNumber++;
+
+                foreach ($certificatesResponse['certRequests'] as $certData) {
+                    $this->certificates[$certData['certificateId']] = new CertificateDetails(
+                        $certData['certificateId'],
+                        $certData['name']
+                    );
+                }
+            } while (count($certificatesResponse['certRequests']) === $pageSize);
+        }
+
+        return $this->certificates;
+    }
+
+    /**
      * @param SigningRequest $request
      * @param Type $type
      * @param $appIdId
@@ -200,7 +247,9 @@ final class PortalConnection
 
         $certificatePayload = (string) $createCertificateResponse->getBody();
         if (strpos($certificatePayload, 'already')) {
-            throw new ApplePortalException('There already is a push certificate for this app');
+            throw new ApplicationAlreadyHasPushCertificateException(
+                'There are too many push certificates for this app'
+            );
         }
 
         $certificateJson = json_decode($certificatePayload, true);
@@ -220,5 +269,23 @@ final class PortalConnection
         );
 
         return SignedCertificate::fromBinaryEncodedDer((string) $certificateDownloadResponse->getBody());
+    }
+
+    public function revokeCertificate($type, $certificateId)
+    {
+        $certificateRevokeResponse = $this->client->post(
+            'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/revokeCertificate.action',
+            [
+                'cookies' => $this->cookieJar,
+                'headers' => $this->csrfTokens,
+                'form_params' => [
+                    'teamId' => $this->teamId,
+                    'type' => (string) $type,
+                    'certificateId' => $certificateId,
+                ]
+            ]
+        );
+
+        return $certificateRevokeResponse->getStatusCode() === 200;
     }
 }

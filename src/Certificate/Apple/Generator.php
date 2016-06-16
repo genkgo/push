@@ -38,4 +38,26 @@ final class Generator
             $this->portalConnection->signCertificate($signingRequest, $type, $app->getAppIdId())
         );
     }
+
+    /**
+     * @param Type $type
+     * @param $appId
+     * @return PushCertificate
+     */
+    public function revoke(Type $type, $appId)
+    {
+        $app = $this->portalConnection->fetchApp($appId);
+
+        /** @var CertificateDetails[] $certificates */
+        $certificates = array_filter(
+            $this->portalConnection->fetchCertificates($type),
+            function (CertificateDetails $certificateDetails) use ($app) {
+                return $certificateDetails->getName() === $app->getAppId();
+            }
+        );
+
+        foreach ($certificates as $certificate) {
+            $this->portalConnection->revokeCertificate($type, $certificate->getCertificateId());
+        }
+    }
 }
