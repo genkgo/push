@@ -64,11 +64,15 @@ final class Message
     }
 
     /**
-     * @param $identifier
+     * @param int $identifier
      * @return Message
      */
     public function withIdentifier($identifier)
     {
+        if (filter_var($identifier, FILTER_VALIDATE_INT) === false) {
+            throw new \InvalidArgumentException('Identifier must be an integer');
+        }
+
         $clone = clone $this;
         $clone->identifier = $identifier;
         return $clone;

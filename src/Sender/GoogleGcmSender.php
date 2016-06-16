@@ -54,6 +54,7 @@ final class GoogleGcmSender implements SenderInterface
         $randomCollapse = rand(11, 100);
 
         $gcmMessage = new GcmMessage("{$randomCollapse}", [
+            'id' => $message->getIdentifier(),
             'message' => (string) $message->getBody(),
             'title', (string) $message->getTitle()
         ]);
