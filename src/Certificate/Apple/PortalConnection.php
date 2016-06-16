@@ -184,7 +184,7 @@ final class PortalConnection
     {
         $this->initialize();
 
-        $createCertificateResponse = json_decode((string) $this->client->post(
+        $createCertificateResponse = $this->client->post(
             'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/submitCertificateRequest.action',
             [
                 'cookies' => $this->cookieJar,
@@ -196,9 +196,15 @@ final class PortalConnection
                     'appIdId' => $appIdId,
                 ]
             ]
-        )->getBody(), true);
+        );
 
-        $certificateId = $createCertificateResponse['certRequest']['certificate']['certificateId'];
+        $certificatePayload = (string) $createCertificateResponse->getBody();
+        if (strpos($certificatePayload, 'already')) {
+            throw new ApplePortalException('There already is a push certificate for this app');
+        }
+
+        $certificateJson = json_decode($certificatePayload, true);
+        $certificateId = $certificateJson['certRequest']['certificate']['certificateId'];
 
         $certificateDownloadResponse = $this->client->get(
             'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/downloadCertificateContent.action',
@@ -212,7 +218,6 @@ final class PortalConnection
                 ]
             ]
         );
-
 
         return SignedCertificate::fromBinaryEncodedDer((string) $certificateDownloadResponse->getBody());
     }
