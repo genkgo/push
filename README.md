@@ -25,16 +25,21 @@ you notice compliance oversights, please send a patch via pull request.
 
 ```php
 <?php
+use Genkgo\Push\Body;
 use Genkgo\Push\Gateway;
+use Genkgo\Push\Message;
 use Genkgo\Push\Sender\GoogleGcmSender;
 use Genkgo\Push\Sender\AppleApnSender;
 use Genkgo\Push\Sender\WindowsSender;
+use Genkgo\Push\Recipient\AndroidDeviceRecipient;
+use Genkgo\Push\Recipient\AppleDeviceRecipient;
+use Genkgo\Push\Recipient\WindowsDeviceRecipient;
 
 // construct the gateway, using the different senders
 $gateway = new Gateway([
-    new GoogleGcmSender('API key obtained through the Google API Console'),
-    new AppleApnSender('/location/to/cert.pem', 'passphrase'),
-    new WindowsSender()
+    GoogleGcmSender::fromApiKey('API key obtained through the Google API Console'),
+    AppleApnSender::fromCertificate('/location/to/cert.pem', 'passphrase'),
+    WindowsSender::fromDefault()
 ]);
 
 // below message will automatically go to their own specific sender
