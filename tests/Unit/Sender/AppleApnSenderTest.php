@@ -15,7 +15,7 @@ class AppleApnSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
-        $sender = new AppleApnSender(dirname(dirname(__DIR__)) . '/Stubs/cert.pem', 'password');
+        $sender = AppleApnSender::fromCertificate(dirname(dirname(__DIR__)) . '/Stubs/cert.pem', 'password');
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
@@ -24,7 +24,7 @@ class AppleApnSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');
 
-        $sender = new AppleApnSender(dirname(dirname(__DIR__)) . '/Stubs/cert.pem', 'password');
+        $sender = AppleApnSender::fromCertificate(dirname(dirname(__DIR__)) . '/Stubs/cert.pem', 'password');
         $this->assertFalse($sender->supports($message, $recipient));
     }
 }

@@ -19,11 +19,11 @@ final class WindowsSender implements SenderInterface
     private $connection;
 
     /**
-     *
+     * @param WindowsPhonePushNotification $connection
      */
-    public function __construct()
+    public function __construct(WindowsPhonePushNotification $connection)
     {
-        $this->connection = new WindowsPhonePushNotification();
+        $this->connection = $connection;
     }
 
     /**
@@ -48,5 +48,13 @@ final class WindowsSender implements SenderInterface
             (string) $message->getTitle(),
             (string) $message->getBody()
         );
+    }
+
+    /**
+     * @return WindowsSender
+     */
+    public static function fromDefault()
+    {
+        return new self(new WindowsPhonePushNotification());
     }
 }

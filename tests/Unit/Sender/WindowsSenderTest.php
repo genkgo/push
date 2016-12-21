@@ -19,7 +19,7 @@ class WindowsSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new WindowsDeviceRecipient('token');
 
-        $sender = new WindowsSender();
+        $sender = WindowsSender::fromDefault();
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
@@ -28,7 +28,7 @@ class WindowsSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
-        $sender = new WindowsSender();
+        $sender = WindowsSender::fromDefault();
         $this->assertFalse($sender->supports($message, $recipient));
     }
 }

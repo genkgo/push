@@ -24,15 +24,14 @@ final class GoogleGcmSender implements SenderInterface
     private $retries;
 
     /**
-     * @param string $apiKey
+     * @param Sender $sender
      * @param int $retries
      */
-    public function __construct($apiKey, $retries = 5)
+    public function __construct(Sender $sender, $retries = 5)
     {
-        $this->sender = new Sender($apiKey);
+        $this->sender = $sender;
         $this->retries = $retries;
     }
-
 
     /**
      * @param Message $message
@@ -64,5 +63,17 @@ final class GoogleGcmSender implements SenderInterface
         }
 
         $this->sender->sendMulti($gcmMessage, [$recipient->getToken()], $this->retries);
+    }
+
+    /**
+     * @param string $apiKey
+     * @param int $retries
+     * @return GoogleGcmSender
+     */
+    public static function fromApiKey($apiKey, $retries = 5)
+    {
+        $sender = new self(new Sender($apiKey));
+        $sender->retries = $retries;
+        return $sender;
     }
 }

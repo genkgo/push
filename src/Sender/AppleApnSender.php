@@ -22,13 +22,12 @@ final class AppleApnSender implements SenderInterface
     private $connection;
 
     /**
-     * @param $certificate
-     * @param $passphrase
-     * @param bool|false $sandboxMode
+     * AppleApnSender constructor.
+     * @param Connection $connection
      */
-    public function __construct($certificate, $passphrase, $sandboxMode = false)
+    public function __construct(Connection $connection)
     {
-        $this->connection = new Connection(new Certificate($certificate, $passphrase), $sandboxMode);
+        $this->connection = $connection;
     }
 
     /**
@@ -55,5 +54,16 @@ final class AppleApnSender implements SenderInterface
 
         $notification = new Notification($this->connection);
         $notification->send($appleMessage);
+    }
+
+    /**
+     * @param $certificate
+     * @param $passphrase
+     * @param bool|false $sandboxMode
+     * @return AppleApnSender
+     */
+    public static function fromCertificate($certificate, $passphrase, $sandboxMode = false)
+    {
+        return new self(new Connection(new Certificate($certificate, $passphrase), $sandboxMode));
     }
 }

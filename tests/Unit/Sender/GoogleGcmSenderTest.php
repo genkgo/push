@@ -15,7 +15,7 @@ class GoogleGcmSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');
 
-        $sender = new GoogleGcmSender('key');
+        $sender = GoogleGcmSender::fromApiKey('key');
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
@@ -24,7 +24,7 @@ class GoogleGcmSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
-        $sender = new GoogleGcmSender('key');
+        $sender = GoogleGcmSender::fromApiKey('key');
         $this->assertFalse($sender->supports($message, $recipient));
     }
 }
