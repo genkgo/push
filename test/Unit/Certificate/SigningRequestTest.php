@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit\Certificate;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Certificate\Apple\PrivateKey;
 use Genkgo\Push\Certificate\Apple\SigningRequest;
 
-class SigningRequestTest extends AbstractTestCase
+final class SigningRequestTest extends AbstractTestCase
 {
     public function test()
     {
@@ -15,7 +17,7 @@ class SigningRequestTest extends AbstractTestCase
             'email@address.com'
         );
 
-        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string) $request);
+        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string)$request);
     }
 
     public function testIllegalCharacter()
@@ -26,7 +28,7 @@ class SigningRequestTest extends AbstractTestCase
             'email@address.com'
         );
 
-        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string) $request);
+        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string)$request);
     }
 
     public function testTooLongCommonName()
@@ -37,6 +39,6 @@ class SigningRequestTest extends AbstractTestCase
             'email@address.com'
         );
 
-        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string) $request);
+        $this->assertStringStartsWith('-----BEGIN CERTIFICATE REQUEST-----', (string)$request);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit;
 
 use Genkgo\Push\AbstractTestCase;
@@ -9,14 +11,14 @@ use Genkgo\Push\Message;
 use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 use Genkgo\Push\SenderInterface;
 
-class GatewayTest extends AbstractTestCase
+final class GatewayTest extends AbstractTestCase
 {
     public function testSend()
     {
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');
 
-        $sender = $this->getMock(SenderInterface::class);
+        $sender = $this->createMock(SenderInterface::class);
         $sender->expects($this->at(0))->method('supports')->with($message, $recipient)->willReturn(true);
         $sender->expects($this->at(1))->method('send')->with($message, $recipient)->willReturn(true);
 
@@ -26,12 +28,12 @@ class GatewayTest extends AbstractTestCase
 
     public function testExceptionUnsupportedSender()
     {
-        $this->setExpectedException(UnsupportedMessageRecipient::class);
+        $this->expectException(UnsupportedMessageRecipient::class);
 
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');
 
-        $sender = $this->getMock(SenderInterface::class);
+        $sender = $this->createMock(SenderInterface::class);
         $sender->expects($this->at(0))->method('supports')->with($message, $recipient)->willReturn(false);
 
         $gateway = new Gateway([$sender]);

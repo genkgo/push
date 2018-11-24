@@ -1,14 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Title;
 
-class TitleTest extends AbstractTestCase
+final class TitleTest extends AbstractTestCase
 {
     public function testToString()
     {
         $message = new Title('test');
-        $this->assertEquals('test', (string) $message);
+        $this->assertEquals('test', (string)$message);
     }
 }

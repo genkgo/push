@@ -1,16 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
-/**
- * Class CertificateDetails
- * @package Genkgo\Push\Certificate\Apple
- */
 final class CertificateDetails
 {
     /**
      * @var string
      */
     private $certificateId;
+
     /**
      * @var string
      */
@@ -20,7 +19,7 @@ final class CertificateDetails
      * @param string $certificateId
      * @param string $name
      */
-    public function __construct($certificateId, $name)
+    public function __construct(string $certificateId, string $name)
     {
         $this->certificateId = $certificateId;
         $this->name = $name;
@@ -29,7 +28,7 @@ final class CertificateDetails
     /**
      * @return string
      */
-    public function getCertificateId()
+    public function getCertificateId(): string
     {
         return $this->certificateId;
     }
@@ -37,7 +36,7 @@ final class CertificateDetails
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

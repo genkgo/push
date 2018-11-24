@@ -1,20 +1,20 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push;
 
-/**
- * Class Message
- * @package Genkgo\Push
- */
 final class Message
 {
     /**
      * @var Body
      */
     private $body;
+
     /**
      * @var Title
      */
     private $title;
+
     /**
      * @var array
      */
@@ -31,7 +31,7 @@ final class Message
     /**
      * @return Body
      */
-    public function getBody()
+    public function getBody(): Body
     {
         return $this->body;
     }
@@ -39,7 +39,7 @@ final class Message
     /**
      * @return Title
      */
-    public function getTitle()
+    public function getTitle(): Title
     {
         return $this->title;
     }
@@ -47,7 +47,7 @@ final class Message
     /**
      * @return array
      */
-    public function getExtra()
+    public function getExtra(): array
     {
         return $this->extra;
     }
@@ -56,7 +56,7 @@ final class Message
      * @param Title $title
      * @return Message
      */
-    public function withTitle(Title $title)
+    public function withTitle(Title $title): self
     {
         $clone = clone $this;
         $clone->title = $title;
@@ -64,11 +64,11 @@ final class Message
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param mixed $key
+     * @param mixed $value
      * @return Message
      */
-    public function withExtra($key, $value)
+    public function withExtra($key, $value): self
     {
         $clone = clone $this;
         $clone->extra[$key] = $value;

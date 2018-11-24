@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit;
 
 use Genkgo\Push\AbstractTestCase;
@@ -6,7 +8,7 @@ use Genkgo\Push\Body;
 use Genkgo\Push\Message;
 use Genkgo\Push\Title;
 
-class MessageTest extends AbstractTestCase
+final class MessageTest extends AbstractTestCase
 {
     public function testImmutability()
     {
@@ -18,7 +20,7 @@ class MessageTest extends AbstractTestCase
     {
         $body = new Body('test');
         $message = new Message($body);
-        $this->assertSame('test', (string) $message->getBody());
+        $this->assertSame('test', (string)$message->getBody());
     }
 
     public function testTitle()

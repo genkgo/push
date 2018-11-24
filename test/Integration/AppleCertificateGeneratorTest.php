@@ -1,16 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Integration;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Certificate\Apple\Generator;
 use Genkgo\Push\Certificate\Apple\PortalConnection;
-use Genkgo\Push\Certificate\Apple\PushCertificate;
+use Genkgo\Push\Certificate\Apple\CombinedCertificate;
 use Genkgo\Push\Certificate\Apple\Type;
 use Genkgo\Push\Exception\ApplePortalException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 
-class AppleCertificateGeneratorTest extends AbstractTestCase
+final class AppleCertificateGeneratorTest extends AbstractTestCase
 {
     public function testGenerate()
     {
@@ -20,7 +22,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
         $appIdKey = '891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757';
         $redirectUrl = 'https://idmsa.apple.com/IDMSWebAuth/login?&appIdKey=' . $appIdKey . '&path=%2F%2Fmembercenter%2Findex.action';
 
-        $client = $this->getMock(Client::class);
+        $client = $this->createMock(Client::class);
         $client->expects($this->at(0))
             ->method('__call')
             ->with('get', $this->callback(function ($arguments) {
@@ -29,8 +31,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, ['Location' => $redirectUrl])
-            )
-        ;
+            );
 
         $client->expects($this->at(1))
             ->method('__call')
@@ -43,8 +44,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, [], 'correct')
-            )
-        ;
+            );
 
         $client->expects($this->at(2))
             ->method('__call')
@@ -55,8 +55,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, ['csrf' => 'csrf1', 'csrf_ts' => 'csrf2'], 'correct')
-            )
-        ;
+            );
 
         $apps = [
             'appIds' => [[
@@ -74,9 +73,8 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
                 return $arguments;
             }))
             ->willReturn(
-                new Response(200, [], json_encode($apps))
-            )
-        ;
+                new Response(200, [], \json_encode($apps))
+            );
 
         $certificate = [
             'certRequest' => [
@@ -99,9 +97,8 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
                 return $arguments;
             }))
             ->willReturn(
-                new Response(200, [], json_encode($certificate))
-            )
-        ;
+                new Response(200, [], \json_encode($certificate))
+            );
 
         $client->expects($this->at(5))
             ->method('__call')
@@ -115,25 +112,24 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
                 return $arguments;
             }))
             ->willReturn(
-                new Response(200, [], file_get_contents(__DIR__ . '/../Stubs/signed.certificate.cer'))
-            )
-        ;
+                new Response(200, [], \file_get_contents(__DIR__ . '/../Stubs/signed.certificate.cer'))
+            );
 
         $generator = new Generator(new PortalConnection($client, $appleId, $password, $teamId));
         $pushCertificate = $generator->generate(new Type(Type::DEVELOPMENT), 'app1');
-        $this->assertInstanceOf(PushCertificate::class, $pushCertificate);
+        $this->assertInstanceOf(CombinedCertificate::class, $pushCertificate);
     }
 
     public function testInvalidLogin()
     {
-        $this->setExpectedException(ApplePortalException::class);
+        $this->expectException(ApplePortalException::class);
         $appleId = 'test@apple.com';
         $password = 'password';
         $teamId = 'team';
         $appIdKey = '891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757';
         $redirectUrl = 'https://idmsa.apple.com/IDMSWebAuth/login?&appIdKey=' . $appIdKey . '&path=%2F%2Fmembercenter%2Findex.action';
 
-        $client = $this->getMock(Client::class);
+        $client = $this->createMock(Client::class);
         $client->expects($this->at(0))
             ->method('__call')
             ->with('get', $this->callback(function ($arguments) {
@@ -142,8 +138,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, ['Location' => $redirectUrl])
-            )
-        ;
+            );
 
         $client->expects($this->at(1))
             ->method('__call')
@@ -156,8 +151,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, [], 'entered incorrectly')
-            )
-        ;
+            );
 
         $generator = new Generator(new PortalConnection($client, $appleId, $password, $teamId));
         $generator->generate(new Type(Type::DEVELOPMENT), 'app1');
@@ -165,14 +159,14 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
 
     public function testUnknownApp()
     {
-        $this->setExpectedException(ApplePortalException::class);
+        $this->expectException(ApplePortalException::class);
         $appleId = 'test@apple.com';
         $password = 'password';
         $teamId = 'team';
         $appIdKey = '891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757';
         $redirectUrl = 'https://idmsa.apple.com/IDMSWebAuth/login?&appIdKey=' . $appIdKey . '&path=%2F%2Fmembercenter%2Findex.action';
 
-        $client = $this->getMock(Client::class);
+        $client = $this->createMock(Client::class);
         $client->expects($this->at(0))
             ->method('__call')
             ->with('get', $this->callback(function ($arguments) {
@@ -181,8 +175,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, ['Location' => $redirectUrl])
-            )
-        ;
+            );
 
         $client->expects($this->at(1))
             ->method('__call')
@@ -195,8 +188,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, [], 'correct')
-            )
-        ;
+            );
 
         $client->expects($this->at(2))
             ->method('__call')
@@ -207,8 +199,7 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
             }))
             ->willReturn(
                 new Response(200, ['csrf' => 'csrf1', 'csrf_ts' => 'csrf2'], 'correct')
-            )
-        ;
+            );
 
         $apps = [
             'appIds' => [[
@@ -226,9 +217,8 @@ class AppleCertificateGeneratorTest extends AbstractTestCase
                 return $arguments;
             }))
             ->willReturn(
-                new Response(200, [], json_encode($apps))
-            )
-        ;
+                new Response(200, [], \json_encode($apps))
+            );
 
         $generator = new Generator(new PortalConnection($client, $appleId, $password, $teamId));
         $generator->generate(new Type(Type::DEVELOPMENT), 'app1');

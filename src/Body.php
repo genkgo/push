@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push;
 
-/**
- * Class Body
- * @package Genkgo\Push
- */
 final class Body
 {
     /**
@@ -15,7 +13,7 @@ final class Body
     /**
      * @param string $body
      */
-    public function __construct($body)
+    public function __construct(string $body)
     {
         $this->body = $body;
     }
@@ -23,7 +21,7 @@ final class Body
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->body;
     }

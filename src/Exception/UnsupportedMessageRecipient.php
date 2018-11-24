@@ -1,6 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Exception;
 
-class UnsupportedMessageRecipient extends AbstractException
+final class UnsupportedMessageRecipient extends AbstractException
 {
 }

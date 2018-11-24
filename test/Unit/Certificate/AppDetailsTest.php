@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit\Certificate;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Certificate\Apple\AppDetails;
 
-class AppDetailsTest extends AbstractTestCase
+final class AppDetailsTest extends AbstractTestCase
 {
     public function test()
     {

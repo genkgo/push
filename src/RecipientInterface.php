@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push;
 
 interface RecipientInterface
@@ -6,11 +8,11 @@ interface RecipientInterface
     /**
      * @return string
      */
-    public function getToken();
+    public function getToken(): string;
 
     /**
      * @param $token
      * @return RecipientInterface
      */
-    public static function fromString($token);
+    public static function fromString($token): RecipientInterface;
 }

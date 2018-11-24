@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit\Recipient;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 
-class AndroidDeviceRecipientTest extends AbstractTestCase
+final class AndroidDeviceRecipientTest extends AbstractTestCase
 {
     public function testToken()
     {

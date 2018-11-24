@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Unit\Certificate;
 
 use Genkgo\Push\AbstractTestCase;
 use Genkgo\Push\Certificate\Apple\Type;
 use InvalidArgumentException;
 
-class TypeTest extends AbstractTestCase
+final class TypeTest extends AbstractTestCase
 {
     public function testValidConstructor()
     {
@@ -16,7 +18,7 @@ class TypeTest extends AbstractTestCase
 
     public function testInvalidConstructor()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Type('test');
     }
 }

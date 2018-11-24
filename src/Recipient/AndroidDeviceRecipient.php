@@ -1,12 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Recipient;
 
 use Genkgo\Push\RecipientInterface;
 
-/**
- * Class AppleDeviceRecipient
- * @package Genkgo\Push\Recipient
- */
 final class AndroidDeviceRecipient implements RecipientInterface
 {
     /**
@@ -25,7 +23,7 @@ final class AndroidDeviceRecipient implements RecipientInterface
     /**
      * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -34,7 +32,7 @@ final class AndroidDeviceRecipient implements RecipientInterface
      * @param $token
      * @return RecipientInterface
      */
-    public static function fromString($token)
+    public static function fromString($token): RecipientInterface
     {
         return new self($token);
     }

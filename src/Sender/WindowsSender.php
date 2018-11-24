@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Sender;
 
 use Genkgo\Push\Message;
@@ -7,10 +9,6 @@ use Genkgo\Push\RecipientInterface;
 use Genkgo\Push\SenderInterface;
 use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
 
-/**
- * Class WindowsSender
- * @package Genkgo\Push\Sender
- */
 final class WindowsSender implements SenderInterface
 {
     /**
@@ -31,7 +29,7 @@ final class WindowsSender implements SenderInterface
      * @param RecipientInterface $recipient
      * @return bool
      */
-    public function supports(Message $message, RecipientInterface $recipient)
+    public function supports(Message $message, RecipientInterface $recipient): bool
     {
         return $recipient instanceof WindowsDeviceRecipient;
     }
@@ -41,19 +39,19 @@ final class WindowsSender implements SenderInterface
      * @param RecipientInterface|WindowsDeviceRecipient $recipient
      * @codeCoverageIgnore
      */
-    public function send(Message $message, RecipientInterface $recipient)
+    public function send(Message $message, RecipientInterface $recipient): void
     {
         $this->connection->pushToast(
             $recipient->getToken(),
-            (string) $message->getTitle(),
-            (string) $message->getBody()
+            (string)$message->getTitle(),
+            (string)$message->getBody()
         );
     }
 
     /**
      * @return WindowsSender
      */
-    public static function fromDefault()
+    public static function fromDefault(): self
     {
         return new self(new WindowsPhonePushNotification());
     }

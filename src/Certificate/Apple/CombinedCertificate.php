@@ -1,16 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
-/**
- * Class PushCertificate
- * @package Genkgo\Push\Certificate\Apple
- */
-final class PushCertificate
+final class CombinedCertificate
 {
     /**
      * @var PrivateKey
      */
     private $privateKey;
+
     /**
      * @var SignedCertificate
      */
@@ -29,7 +28,7 @@ final class PushCertificate
     /**
      * @return PrivateKey
      */
-    public function getPrivateKey()
+    public function getPrivateKey(): PrivateKey
     {
         return $this->privateKey;
     }
@@ -37,7 +36,7 @@ final class PushCertificate
     /**
      * @return SignedCertificate
      */
-    public function getSignedCertificate()
+    public function getSignedCertificate(): SignedCertificate
     {
         return $this->signedCertificate;
     }
@@ -45,22 +44,22 @@ final class PushCertificate
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return (string) $this->signedCertificate . (string) $this->privateKey;
+        return (string)$this->signedCertificate . (string)$this->privateKey;
     }
 
     /**
      * @param $concatenated
-     * @return PushCertificate
+     * @return CombinedCertificate
      */
-    public static function fromString($concatenated)
+    public static function fromString($concatenated): self
     {
-        list($signedCertificate, $privateKey) = explode('-' . PHP_EOL . '-', $concatenated);
+        list($signedCertificate, $privateKey) = \explode('-' . PHP_EOL . '-', $concatenated);
 
         return new self(
             PrivateKey::fromString('-' . $privateKey),
-            new SignedCertificate($signedCertificate . '-'  . PHP_EOL)
+            new SignedCertificate($signedCertificate . '-' . PHP_EOL)
         );
     }
 }
