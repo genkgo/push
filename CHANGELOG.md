@@ -11,8 +11,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [2.0.0] - ????-??-??
 
+### Added
+
+- Firebase Cloud Messaging
+
 ### Changed
 
 - PHP requires version 7.1+
 - Strict types
-- PushCertificate is now called CombinedCertificate
+- Apple\PushCertificate is now called Apple\CombinedCertificate
+
+### Removed
+
+- Remove Windows

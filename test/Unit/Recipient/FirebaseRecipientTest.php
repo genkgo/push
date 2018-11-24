@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace Genkgo\Push\Unit\Recipient;
 
 use Genkgo\Push\AbstractTestCase;
-use Genkgo\Push\Recipient\WindowsDeviceRecipient;
+use Genkgo\Push\Recipient\FirebaseRecipient;
 
-final class WindowsDeviceRecipientTest extends AbstractTestCase
+final class FirebaseRecipientTest extends AbstractTestCase
 {
     public function testToken()
     {
-        $recipient = new WindowsDeviceRecipient('test');
+        $recipient = new FirebaseRecipient('test');
         $this->assertEquals('test', $recipient->getToken());
     }
 }

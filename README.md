@@ -1,9 +1,9 @@
 # Genkgo.Push
-Send push messages to Android, Apple and Windows using one interface 
+Send push messages to Android, Apple and Firebase using one interface 
 
 ### Installation
 
-Requires PHP 5.6 or later. There are no plans to support PHP 5.5 or earlier. PRs in this matter are rejected. It is installable and autoloadable via Composer as [genkgo/push](https://packagist.org/packages/genkgo/push).
+Requires PHP 7.1 or later. It is installable and autoloadable via Composer as [genkgo/push](https://packagist.org/packages/genkgo/push).
 
 ### Quality
 
@@ -26,26 +26,27 @@ you notice compliance oversights, please send a patch via pull request.
 ```php
 <?php
 use Genkgo\Push\Body;
+use Genkgo\Push\Firebase\CloudMessaging;
 use Genkgo\Push\Gateway;
 use Genkgo\Push\Message;
+use Genkgo\Push\Sender\FirebaseSender;
 use Genkgo\Push\Sender\GoogleGcmSender;
 use Genkgo\Push\Sender\AppleApnSender;
-use Genkgo\Push\Sender\WindowsSender;
 use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
-use Genkgo\Push\Recipient\WindowsDeviceRecipient;
+use Genkgo\Push\Recipient\FirebaseRecipient;
 
 // construct the gateway, using the different senders
 $gateway = new Gateway([
     GoogleGcmSender::fromApiKey('API key obtained through the Google API Console'),
     AppleApnSender::fromCertificate('/location/to/cert.pem', 'passphrase'),
-    WindowsSender::fromDefault()
+    new FirebaseSender(new CloudMessaging($guzzleClient, $auth), 'fcm-project-id')
 ]);
 
 // below message will automatically go to their own specific sender
 $gateway->send(new Message(new Body('message content')), new AndroidDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new AppleDeviceRecipient('token'));
-$gateway->send(new Message(new Body('message content')), new WindowsDeviceRecipient('token'));
+$gateway->send(new Message(new Body('message content')), new FirebaseRecipient('token'));
 ```
 
 ## Generate Apple Push Certificate
@@ -55,7 +56,6 @@ $gateway->send(new Message(new Body('message content')), new WindowsDeviceRecipi
 <?php
 use Genkgo\Push\Certificate\Apple\Generator;
 use Genkgo\Push\Certificate\Apple\PortalConnection;
-use Genkgo\Push\Certificate\Apple\PushCertificate;
 use Genkgo\Push\Certificate\Apple\Type;
 use GuzzleHttp\Client;
 

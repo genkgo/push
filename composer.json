@@ -4,12 +4,12 @@
     "require" : {
         "php" : "^7.1",
         "ext-json" : "*",
-        "jildertmiedema/windows-phone-push": "~0.0.1",
         "php-gcm/php-gcm": "~1.1.1",
-        "apple/apn-push": "~2.2.2"
+        "apple/apn-push": "~2.2.2",
+        "guzzlehttp/guzzle": "^6.0"
     },
     "suggest": {
-        "guzzlehttp/guzzle": "Guzzle is required to create APN certificates (Apple)"
+        "lcobucci/jwt": "For Oauth2 authorization to FirebaseCM"
     },
     "require-dev" : {
         "ext-openssl" : "*",
@@ -18,7 +18,7 @@
         "phpstan/phpstan": "^0.9",
         "phpstan/phpstan-phpunit": "^0.9",
         "friendsofphp/php-cs-fixer": "^2.9",
-        "guzzlehttp/guzzle": "^6.0"
+        "lcobucci/jwt": "^3.2"
     },
     "autoload" : {
         "psr-4" : {

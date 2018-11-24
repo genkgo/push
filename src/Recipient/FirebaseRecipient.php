@@ -5,7 +5,7 @@ namespace Genkgo\Push\Recipient;
 
 use Genkgo\Push\RecipientInterface;
 
-final class WindowsDeviceRecipient implements RecipientInterface
+final class FirebaseRecipient implements RecipientInterface
 {
     /**
      * @var string
@@ -15,7 +15,7 @@ final class WindowsDeviceRecipient implements RecipientInterface
     /**
      * @param string $token
      */
-    public function __construct($token = null)
+    public function __construct(string $token)
     {
         $this->token = $token;
     }
