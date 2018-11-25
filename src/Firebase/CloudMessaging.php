@@ -57,10 +57,12 @@ final class CloudMessaging
                         'Authorization' => $authorizationHeader,
                     ],
                     \json_encode([
-                        'token' => $token,
-                        'notification' => [
-                            'body' => $notification->getBody(),
-                            'title' => $notification->getTitle(),
+                        'message' => [
+                            'token' => $token,
+                            'notification' => [
+                                'body' => $notification->getBody(),
+                                'title' => $notification->getTitle(),
+                            ]
                         ]
                     ])
                 )
