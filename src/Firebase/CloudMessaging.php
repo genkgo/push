@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Request;
 
 final class CloudMessaging
 {
-    private CONST FCM_ENDPOINT = 'https://fcm.googleapis.com/v1';
+    private const FCM_ENDPOINT = 'https://fcm.googleapis.com/v1';
 
     /**
      * @var AuthorizationHeaderProviderInterface
@@ -27,8 +27,7 @@ final class CloudMessaging
     public function __construct(
         ClientInterface $client,
         AuthorizationHeaderProviderInterface $authorizationHeaderProvider
-    )
-    {
+    ) {
         $this->authorizationHeaderProvider = $authorizationHeaderProvider;
         $this->client = $client;
     }
