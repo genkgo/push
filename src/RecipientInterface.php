@@ -11,8 +11,8 @@ interface RecipientInterface
     public function getToken(): string;
 
     /**
-     * @param $token
+     * @param string $token
      * @return RecipientInterface
      */
-    public static function fromString($token): RecipientInterface;
+    public static function fromString(string $token): RecipientInterface;
 }

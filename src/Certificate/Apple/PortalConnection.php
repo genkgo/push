@@ -57,9 +57,9 @@ final class PortalConnection
 
     /**
      * @param Client $client
-     * @param $appleId
-     * @param $password
-     * @param $teamId
+     * @param string $appleId
+     * @param string $password
+     * @param string $teamId
      */
     public function __construct(Client $client, string $appleId, string $password, string $teamId)
     {
@@ -133,11 +133,11 @@ final class PortalConnection
     }
 
     /**
-     * @param $appId
+     * @param string $appId
      * @return AppDetails
      * @throws ApplePortalException
      */
-    public function fetchApp($appId): AppDetails
+    public function fetchApp(string $appId): AppDetails
     {
         $apps = $this->fetchApps();
         if (isset($apps[$appId])) {
@@ -282,11 +282,11 @@ final class PortalConnection
     }
 
     /**
-     * @param $type
-     * @param $certificateId
+     * @param Type $type
+     * @param string $certificateId
      * @return bool
      */
-    public function revokeCertificate($type, $certificateId): bool
+    public function revokeCertificate(Type $type, string $certificateId): bool
     {
         $certificateRevokeResponse = $this->client->post(
             'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/revokeCertificate.action',

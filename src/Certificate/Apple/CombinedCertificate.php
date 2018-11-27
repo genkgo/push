@@ -50,10 +50,10 @@ final class CombinedCertificate
     }
 
     /**
-     * @param $concatenated
+     * @param string $concatenated
      * @return CombinedCertificate
      */
-    public static function fromString($concatenated): self
+    public static function fromString(string $concatenated): self
     {
         list($signedCertificate, $privateKey) = \explode('-' . PHP_EOL . '-', $concatenated);
 

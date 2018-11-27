@@ -55,12 +55,12 @@ final class AppleApnSender implements SenderInterface
     }
 
     /**
-     * @param $certificate
-     * @param $passphrase
-     * @param bool|false $sandboxMode
+     * @param string $certificate
+     * @param string $passphrase
+     * @param bool $sandboxMode
      * @return AppleApnSender
      */
-    public static function fromCertificate($certificate, $passphrase, $sandboxMode = false): self
+    public static function fromCertificate(string $certificate, string $passphrase, bool $sandboxMode = false): self
     {
         return new self(new Connection(new Certificate($certificate, $passphrase), $sandboxMode));
     }

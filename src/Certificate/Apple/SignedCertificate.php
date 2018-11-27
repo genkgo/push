@@ -41,7 +41,7 @@ final class SignedCertificate
     public static function fromBinaryEncodedDer(string $der): self
     {
         $pem = '-----BEGIN CERTIFICATE-----' . PHP_EOL
-            . \chunk_split(\base64_encode((string)$der), 64, PHP_EOL)
+            . \chunk_split(\base64_encode($der), 64, PHP_EOL)
             . '-----END CERTIFICATE-----' . PHP_EOL;
 
         return new self($pem);

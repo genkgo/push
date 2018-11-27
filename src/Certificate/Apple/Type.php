@@ -18,7 +18,7 @@ final class Type
     private $type;
 
     /**
-     * @param $type
+     * @param string $type
      */
     public function __construct(string $type)
     {

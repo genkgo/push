@@ -27,8 +27,8 @@ final class SigningRequest
 
     /**
      * @param PrivateKey $privateKey
-     * @param $commonName
-     * @param $emailAddress
+     * @param string $commonName
+     * @param string $emailAddress
      */
     public function __construct(PrivateKey $privateKey, string $commonName, string $emailAddress)
     {

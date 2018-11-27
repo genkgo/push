@@ -29,10 +29,10 @@ final class FirebaseRecipient implements RecipientInterface
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return RecipientInterface
      */
-    public static function fromString($token): RecipientInterface
+    public static function fromString(string $token): RecipientInterface
     {
         return new self($token);
     }

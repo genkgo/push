@@ -44,10 +44,10 @@ final class PrivateKey
     }
 
     /**
-     * @param $pem
+     * @param string $pem
      * @return PrivateKey
      */
-    public static function fromString($pem): self
+    public static function fromString(string $pem): self
     {
         $privateKey = new self();
         $privateKey->key = \openssl_pkey_get_private($pem);
