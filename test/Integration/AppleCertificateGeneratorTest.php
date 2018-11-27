@@ -48,7 +48,7 @@ final class AppleCertificateGeneratorTest extends AbstractTestCase
 
         $client->expects($this->at(2))
             ->method('__call')
-            ->with('post', $this->callback(function ($arguments) use ($teamId, $appIdKey) {
+            ->with('post', $this->callback(function ($arguments) use ($teamId) {
                 $this->assertEquals($arguments[0], 'https://developer.apple.com/services-account/QH65B2/account/ios/identifiers/listAppIds.action');
                 $this->assertEquals($arguments[1]['form_params']['teamId'], $teamId);
                 return $arguments;
@@ -67,7 +67,7 @@ final class AppleCertificateGeneratorTest extends AbstractTestCase
 
         $client->expects($this->at(3))
             ->method('__call')
-            ->with('post', $this->callback(function ($arguments) use ($teamId, $appIdKey) {
+            ->with('post', $this->callback(function ($arguments) use ($teamId) {
                 $this->assertEquals($arguments[0], 'https://developer.apple.com/services-account/QH65B2/account/ios/identifiers/listAppIds.action');
                 $this->assertEquals($arguments[1]['form_params']['teamId'], $teamId);
                 return $arguments;
@@ -86,7 +86,7 @@ final class AppleCertificateGeneratorTest extends AbstractTestCase
 
         $client->expects($this->at(4))
             ->method('__call')
-            ->with('post', $this->callback(function ($arguments) use ($teamId, $appIdKey) {
+            ->with('post', $this->callback(function ($arguments) use ($teamId) {
                 $this->assertEquals($arguments[0], 'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/submitCertificateRequest.action');
                 $this->assertEquals($arguments[1]['form_params']['teamId'], $teamId);
                 $this->assertEquals($arguments[1]['form_params']['type'], Type::DEVELOPMENT);
@@ -102,7 +102,7 @@ final class AppleCertificateGeneratorTest extends AbstractTestCase
 
         $client->expects($this->at(5))
             ->method('__call')
-            ->with('get', $this->callback(function ($arguments) use ($teamId, $appIdKey) {
+            ->with('get', $this->callback(function ($arguments) use ($teamId) {
                 $this->assertEquals($arguments[0], 'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/downloadCertificateContent.action');
                 $this->assertEquals($arguments[1]['query']['teamId'], $teamId);
                 $this->assertEquals($arguments[1]['query']['type'], Type::DEVELOPMENT);
@@ -192,7 +192,7 @@ final class AppleCertificateGeneratorTest extends AbstractTestCase
 
         $client->expects($this->at(2))
             ->method('__call')
-            ->with('post', $this->callback(function ($arguments) use ($teamId, $appIdKey) {
+            ->with('post', $this->callback(function ($arguments) use ($teamId) {
                 $this->assertEquals($arguments[0], 'https://developer.apple.com/services-account/QH65B2/account/ios/identifiers/listAppIds.action');
                 $this->assertEquals($arguments[1]['form_params']['teamId'], $teamId);
                 return $arguments;
@@ -211,7 +211,7 @@ final class AppleCertificateGeneratorTest extends AbstractTestCase
 
         $client->expects($this->at(3))
             ->method('__call')
-            ->with('post', $this->callback(function ($arguments) use ($teamId, $appIdKey) {
+            ->with('post', $this->callback(function ($arguments) use ($teamId) {
                 $this->assertEquals($arguments[0], 'https://developer.apple.com/services-account/QH65B2/account/ios/identifiers/listAppIds.action');
                 $this->assertEquals($arguments[1]['form_params']['teamId'], $teamId);
                 return $arguments;
