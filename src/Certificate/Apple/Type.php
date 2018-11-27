@@ -1,24 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
 use InvalidArgumentException;
 use ReflectionClass;
 
-/**
- * Class Type
- * @package Genkgo\Push\Certificate\Apple
- */
 final class Type
 {
-    /**
-     *
-     */
-    const DEVELOPMENT = "BKLRAVXMGM";
+    public const DEVELOPMENT = "BKLRAVXMGM";
 
-    /**
-     *
-     */
-    const PRODUCTION = "UPV3DW712I";
+    public const PRODUCTION = "UPV3DW712I";
 
     /**
      * @var string
@@ -28,9 +20,9 @@ final class Type
     /**
      * @param $type
      */
-    public function __construct($type)
+    public function __construct(string $type)
     {
-        if (in_array($type, [self::DEVELOPMENT, self::PRODUCTION]) === false) {
+        if (\in_array($type, [self::DEVELOPMENT, self::PRODUCTION]) === false) {
             throw new InvalidArgumentException('Unknown type ' . $type);
         }
 
@@ -40,7 +32,7 @@ final class Type
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->type;
     }
@@ -48,11 +40,11 @@ final class Type
     /**
      * @return string
      */
-    public function getHumanReadable()
+    public function getHumanReadable(): string
     {
         $class = new ReflectionClass(static::class);
-        $constants = array_flip($class->getConstants());
+        $constants = \array_flip($class->getConstants());
 
-        return ucfirst(strtolower($constants[$this->type]));
+        return \ucfirst(\strtolower($constants[$this->type]));
     }
 }

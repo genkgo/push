@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Sender;
 
 use Genkgo\Push\Message;
@@ -8,16 +10,13 @@ use Genkgo\Push\SenderInterface;
 use PHP_GCM\Message as GcmMessage;
 use PHP_GCM\Sender;
 
-/**
- * Class GoogleGcmSender
- * @package Genkgo\Push\Sender
- */
 final class GoogleGcmSender implements SenderInterface
 {
     /**
      * @var Sender
      */
     private $sender;
+
     /**
      * @var int
      */
@@ -38,7 +37,7 @@ final class GoogleGcmSender implements SenderInterface
      * @param RecipientInterface|AndroidDeviceRecipient $recipient
      * @return bool
      */
-    public function supports(Message $message, RecipientInterface $recipient)
+    public function supports(Message $message, RecipientInterface $recipient): bool
     {
         return $recipient instanceof AndroidDeviceRecipient;
     }
@@ -48,13 +47,13 @@ final class GoogleGcmSender implements SenderInterface
      * @param RecipientInterface $recipient
      * @codeCoverageIgnore
      */
-    public function send(Message $message, RecipientInterface $recipient)
+    public function send(Message $message, RecipientInterface $recipient): void
     {
-        $randomCollapse = rand(11, 100);
+        $randomCollapse = \rand(11, 100);
 
         $gcmMessage = new GcmMessage("{$randomCollapse}", [
-            'message' => (string) $message->getBody(),
-            'title', (string) $message->getTitle()
+            'message' => (string)$message->getBody(),
+            'title', (string)$message->getTitle()
         ]);
 
         $extra = $message->getExtra();
@@ -70,7 +69,7 @@ final class GoogleGcmSender implements SenderInterface
      * @param int $retries
      * @return GoogleGcmSender
      */
-    public static function fromApiKey($apiKey, $retries = 5)
+    public static function fromApiKey($apiKey, $retries = 5): self
     {
         $sender = new self(new Sender($apiKey));
         $sender->retries = $retries;

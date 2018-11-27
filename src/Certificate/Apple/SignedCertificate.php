@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
-/**
- * Class SignedCertificate
- * @package Genkgo\Push\Certificate\Apple
- */
 final class SignedCertificate
 {
     /**
@@ -15,7 +13,7 @@ final class SignedCertificate
     /**
      * @param string $certificate
      */
-    public function __construct($certificate)
+    public function __construct(string $certificate)
     {
         $this->certificate = $certificate;
     }
@@ -23,7 +21,7 @@ final class SignedCertificate
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->certificate;
     }
@@ -33,19 +31,18 @@ final class SignedCertificate
      */
     public function asResource()
     {
-        return openssl_x509_read($this->certificate);
+        return \openssl_x509_read($this->certificate);
     }
 
     /**
-     * @param $der
+     * @param string $der
      * @return SignedCertificate
      */
-    public static function fromBinaryEncodedDer($der)
+    public static function fromBinaryEncodedDer(string $der): self
     {
         $pem = '-----BEGIN CERTIFICATE-----' . PHP_EOL
-            . chunk_split(base64_encode((string) $der), 64, PHP_EOL)
-            . '-----END CERTIFICATE-----' . PHP_EOL
-        ;
+            . \chunk_split(\base64_encode((string)$der), 64, PHP_EOL)
+            . '-----END CERTIFICATE-----' . PHP_EOL;
 
         return new self($pem);
     }

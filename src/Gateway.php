@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push;
 
 use Genkgo\Push\Exception\UnsupportedMessageRecipient;
@@ -23,7 +25,7 @@ final class Gateway
      * @param RecipientInterface $recipient
      * @throws UnsupportedMessageRecipient
      */
-    public function send(Message $message, RecipientInterface $recipient)
+    public function send(Message $message, RecipientInterface $recipient): void
     {
         foreach ($this->senders as $sender) {
             if ($sender->supports($message, $recipient)) {
@@ -32,7 +34,7 @@ final class Gateway
             }
         }
 
-        $recipientClass = get_class($recipient);
+        $recipientClass = \get_class($recipient);
         throw new UnsupportedMessageRecipient(
             "Could not find a sender that supports the combination of message and recipient ({$recipientClass})"
         );

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Sender;
 
 use Apple\ApnPush\Certificate\Certificate;
@@ -10,10 +12,6 @@ use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\RecipientInterface;
 use Genkgo\Push\SenderInterface;
 
-/**
- * Class AppleApnSender
- * @package Genkgo\Push\Sender
- */
 final class AppleApnSender implements SenderInterface
 {
     /**
@@ -35,7 +33,7 @@ final class AppleApnSender implements SenderInterface
      * @param RecipientInterface $recipient
      * @return bool
      */
-    public function supports(Message $message, RecipientInterface $recipient)
+    public function supports(Message $message, RecipientInterface $recipient): bool
     {
         return $recipient instanceof AppleDeviceRecipient;
     }
@@ -45,10 +43,10 @@ final class AppleApnSender implements SenderInterface
      * @param RecipientInterface|AppleDeviceRecipient $recipient
      * @codeCoverageIgnore
      */
-    public function send(Message $message, RecipientInterface $recipient)
+    public function send(Message $message, RecipientInterface $recipient): void
     {
         $appleMessage = new AppleMessage();
-        $appleMessage->setBody((string) $message->getBody());
+        $appleMessage->setBody((string)$message->getBody());
         $appleMessage->setDeviceToken($recipient->getToken());
         $appleMessage->setCustomData($message->getExtra());
 
@@ -62,7 +60,7 @@ final class AppleApnSender implements SenderInterface
      * @param bool|false $sandboxMode
      * @return AppleApnSender
      */
-    public static function fromCertificate($certificate, $passphrase, $sandboxMode = false)
+    public static function fromCertificate($certificate, $passphrase, $sandboxMode = false): self
     {
         return new self(new Connection(new Certificate($certificate, $passphrase), $sandboxMode));
     }

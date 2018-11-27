@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push;
 
-/**
- * Interface SenderInterface
- * @package Genkgo\Push
- */
 interface SenderInterface
 {
     /**
@@ -12,12 +10,12 @@ interface SenderInterface
      * @param RecipientInterface $recipient
      * @return bool
      */
-    public function supports(Message $message, RecipientInterface $recipient);
+    public function supports(Message $message, RecipientInterface $recipient): bool;
 
     /**
      * @param Message $message
      * @param RecipientInterface $recipient
      * @return void
      */
-    public function send(Message $message, RecipientInterface $recipient);
+    public function send(Message $message, RecipientInterface $recipient): void;
 }

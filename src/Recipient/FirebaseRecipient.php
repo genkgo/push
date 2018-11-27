@@ -5,7 +5,7 @@ namespace Genkgo\Push\Recipient;
 
 use Genkgo\Push\RecipientInterface;
 
-final class AppleDeviceRecipient implements RecipientInterface
+final class FirebaseRecipient implements RecipientInterface
 {
     /**
      * @var string

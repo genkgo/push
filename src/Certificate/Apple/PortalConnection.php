@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
 use Genkgo\Push\Exception\ApplePortalException;
@@ -12,34 +14,42 @@ final class PortalConnection
      * @var Client
      */
     private $client;
+
     /**
      * @var string
      */
     private $appleId;
+
     /**
      * @var string
      */
     private $password;
+
     /**
      * @var string
      */
     private $teamId;
+
     /**
      * @var string
      */
     private $appIdKey;
+
     /**
      * @var CookieJar
      */
     private $cookieJar;
+
     /**
      * @var array
      */
     private $csrfTokens = [];
+
     /**
      * @var array
      */
     private $apps;
+
     /**
      * @var array
      */
@@ -51,7 +61,7 @@ final class PortalConnection
      * @param $password
      * @param $teamId
      */
-    public function __construct(Client $client, $appleId, $password, $teamId)
+    public function __construct(Client $client, string $appleId, string $password, string $teamId)
     {
         $this->client = $client;
         $this->teamId = $teamId;
@@ -62,7 +72,7 @@ final class PortalConnection
     /**
      * @return string
      */
-    public function getAppleId()
+    public function getAppleId(): string
     {
         return $this->appleId;
     }
@@ -70,7 +80,7 @@ final class PortalConnection
     /**
      * @throws ApplePortalException
      */
-    private function initialize()
+    private function initialize(): void
     {
         if ($this->appIdKey === null) {
             $this->cookieJar = new CookieJar();
@@ -84,8 +94,8 @@ final class PortalConnection
             );
 
             $appIdKeyHeader = $appIdKeyResponse->getHeader('Location')[0];
-            $url = parse_url($appIdKeyHeader);
-            parse_str($url['query'], $query);
+            $url = \parse_url($appIdKeyHeader);
+            \parse_str($url['query'], $query);
             $this->appIdKey = $query['appIdKey'];
 
             $loginResponse = $this->client->post(
@@ -100,7 +110,7 @@ final class PortalConnection
                 ]
             );
 
-            if (strpos((string) $loginResponse->getBody(), 'entered incorrectly') !== false) {
+            if (\strpos((string)$loginResponse->getBody(), 'entered incorrectly') !== false) {
                 throw new ApplePortalException('Incorrect login details');
             }
 
@@ -127,7 +137,7 @@ final class PortalConnection
      * @return AppDetails
      * @throws ApplePortalException
      */
-    public function fetchApp($appId)
+    public function fetchApp($appId): AppDetails
     {
         $apps = $this->fetchApps();
         if (isset($apps[$appId])) {
@@ -141,7 +151,7 @@ final class PortalConnection
      * @return array|AppDetails[]
      * @throws ApplePortalException
      */
-    public function fetchApps()
+    public function fetchApps(): array
     {
         $this->initialize();
 
@@ -150,7 +160,7 @@ final class PortalConnection
             $pageSize = 500;
             $pageNumber = 1;
             do {
-                $appsResponse = json_decode((string) $this->client->post(
+                $appsResponse = \json_decode((string)$this->client->post(
                     'https://developer.apple.com/services-account/QH65B2/account/ios/identifiers/listAppIds.action',
                     [
                         'cookies' => $this->cookieJar,
@@ -172,7 +182,7 @@ final class PortalConnection
                         $appIdData['name']
                     );
                 }
-            } while (count($appsResponse['appIds']) === $pageSize);
+            } while (\count($appsResponse['appIds']) === $pageSize);
         }
 
         return $this->apps;
@@ -183,7 +193,7 @@ final class PortalConnection
      * @return array|CertificateDetails[]
      * @throws ApplePortalException
      */
-    public function fetchCertificates(Type $type)
+    public function fetchCertificates(Type $type): array
     {
         $this->initialize();
 
@@ -192,7 +202,7 @@ final class PortalConnection
             $pageSize = 500;
             $pageNumber = 1;
             do {
-                $certificatesResponse = json_decode((string) $this->client->post(
+                $certificatesResponse = \json_decode((string)$this->client->post(
                     'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/listCertRequests.action',
                     [
                         'cookies' => $this->cookieJar,
@@ -200,7 +210,7 @@ final class PortalConnection
                             'teamId' => $this->teamId,
                             'pageNumber' => $pageNumber,
                             'pageSize' => $pageSize,
-                            'types' => (string) $type,
+                            'types' => (string)$type,
                             'sort' => 'name=asc'
                         ]
                     ]
@@ -214,7 +224,7 @@ final class PortalConnection
                         $certData['name']
                     );
                 }
-            } while (count($certificatesResponse['certRequests']) === $pageSize);
+            } while (\count($certificatesResponse['certRequests']) === $pageSize);
         }
 
         return $this->certificates;
@@ -223,11 +233,11 @@ final class PortalConnection
     /**
      * @param SigningRequest $request
      * @param Type $type
-     * @param $appIdId
+     * @param string $appIdId
      * @return SignedCertificate
      * @throws ApplePortalException
      */
-    public function signCertificate(SigningRequest $request, Type $type, $appIdId)
+    public function signCertificate(SigningRequest $request, Type $type, string $appIdId): SignedCertificate
     {
         $this->initialize();
 
@@ -238,21 +248,21 @@ final class PortalConnection
                 'headers' => $this->csrfTokens,
                 'form_params' => [
                     'teamId' => $this->teamId,
-                    'type' => (string) $type,
-                    'csrContent' => (string) $request,
+                    'type' => (string)$type,
+                    'csrContent' => (string)$request,
                     'appIdId' => $appIdId,
                 ]
             ]
         );
 
-        $certificatePayload = (string) $createCertificateResponse->getBody();
-        if (strpos($certificatePayload, 'already')) {
+        $certificatePayload = (string)$createCertificateResponse->getBody();
+        if (\strpos($certificatePayload, 'already')) {
             throw new ApplicationAlreadyHasPushCertificateException(
                 'There are too many push certificates for this app'
             );
         }
 
-        $certificateJson = json_decode($certificatePayload, true);
+        $certificateJson = \json_decode($certificatePayload, true);
         $certificateId = $certificateJson['certRequest']['certificate']['certificateId'];
 
         $certificateDownloadResponse = $this->client->get(
@@ -262,16 +272,21 @@ final class PortalConnection
                 'headers' => $this->csrfTokens,
                 'query' => [
                     'teamId' => $this->teamId,
-                    'type' => (string) $type,
+                    'type' => (string)$type,
                     'certificateId' => $certificateId,
                 ]
             ]
         );
 
-        return SignedCertificate::fromBinaryEncodedDer((string) $certificateDownloadResponse->getBody());
+        return SignedCertificate::fromBinaryEncodedDer((string)$certificateDownloadResponse->getBody());
     }
 
-    public function revokeCertificate($type, $certificateId)
+    /**
+     * @param $type
+     * @param $certificateId
+     * @return bool
+     */
+    public function revokeCertificate($type, $certificateId): bool
     {
         $certificateRevokeResponse = $this->client->post(
             'https://developer.apple.com/services-account/QH65B2/account/ios/certificate/revokeCertificate.action',
@@ -280,7 +295,7 @@ final class PortalConnection
                 'headers' => $this->csrfTokens,
                 'form_params' => [
                     'teamId' => $this->teamId,
-                    'type' => (string) $type,
+                    'type' => (string)$type,
                     'certificateId' => $certificateId,
                 ]
             ]

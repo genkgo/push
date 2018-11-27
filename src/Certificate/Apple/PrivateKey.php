@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
-/**
- * Class PrivateKey
- * @package Genkgo\Push\Certificate\Apple
- */
 final class PrivateKey
 {
     /**
@@ -12,13 +10,10 @@ final class PrivateKey
      */
     private $key;
 
-    /**
-     *
-     */
-    private function generate()
+    private function generate(): void
     {
         if ($this->key === null) {
-            $this->key = openssl_pkey_new([
+            $this->key = \openssl_pkey_new([
                 'digest_alg' => 'sha1',
                 'private_key_bits' => 2048,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA
@@ -27,7 +22,7 @@ final class PrivateKey
     }
 
     /**
-     * @return mixed
+     * @return resource
      */
     public function asResource()
     {
@@ -39,12 +34,12 @@ final class PrivateKey
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $this->generate();
 
         $output = '';
-        openssl_pkey_export($this->key, $output);
+        \openssl_pkey_export($this->key, $output);
         return $output;
     }
 
@@ -52,10 +47,10 @@ final class PrivateKey
      * @param $pem
      * @return PrivateKey
      */
-    public static function fromString($pem)
+    public static function fromString($pem): self
     {
         $privateKey = new self();
-        $privateKey->key = openssl_pkey_get_private($pem);
+        $privateKey->key = \openssl_pkey_get_private($pem);
         return $privateKey;
     }
 }

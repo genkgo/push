@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push\Certificate\Apple;
 
-/**
- * Class Generator
- * @package Genkgo\Push\Certificate\Apple
- */
 final class Generator
 {
     /**
@@ -22,10 +20,10 @@ final class Generator
 
     /**
      * @param Type $type
-     * @param $appId
-     * @return PushCertificate
+     * @param string $appId
+     * @return CombinedCertificate
      */
-    public function generate(Type $type, $appId)
+    public function generate(Type $type, string $appId): CombinedCertificate
     {
         $app = $this->portalConnection->fetchApp($appId);
         $privateKey = new PrivateKey();
@@ -33,7 +31,7 @@ final class Generator
         $csrCommonName = $app->getName() . ' ' . $type->getHumanReadable() . ' Push Certificate';
         $signingRequest = new SigningRequest($privateKey, $csrCommonName, $this->portalConnection->getAppleId());
 
-        return new PushCertificate(
+        return new CombinedCertificate(
             $privateKey,
             $this->portalConnection->signCertificate($signingRequest, $type, $app->getAppIdId())
         );
@@ -41,15 +39,14 @@ final class Generator
 
     /**
      * @param Type $type
-     * @param $appId
-     * @return PushCertificate
+     * @param string $appId
      */
-    public function revoke(Type $type, $appId)
+    public function revoke(Type $type, string $appId): void
     {
         $app = $this->portalConnection->fetchApp($appId);
 
         /** @var CertificateDetails[] $certificates */
-        $certificates = array_filter(
+        $certificates = \array_filter(
             $this->portalConnection->fetchCertificates($type),
             function (CertificateDetails $certificateDetails) use ($app) {
                 return $certificateDetails->getName() === $app->getAppId();

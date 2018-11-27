@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Genkgo\Push;
 
 final class Title
@@ -11,7 +13,7 @@ final class Title
     /**
      * @param string $title
      */
-    public function __construct($title)
+    public function __construct(string $title)
     {
         $this->title = $title;
     }
@@ -19,7 +21,7 @@ final class Title
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->title;
     }
