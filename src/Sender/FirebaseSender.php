@@ -55,7 +55,8 @@ final class FirebaseSender implements SenderInterface
             $recipient->getToken(),
             new Notification(
                 (string)$message->getBody(),
-                (string)$message->getTitle()
+                (string)$message->getTitle(),
+                $message->getExtra()
             )
         );
     }

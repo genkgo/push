@@ -59,6 +59,7 @@ final class CloudMessaging
                     \json_encode([
                         'message' => [
                             'token' => $token,
+                            'data' => $notification->getData(),
                             'notification' => [
                                 'body' => $notification->getBody(),
                                 'title' => $notification->getTitle(),

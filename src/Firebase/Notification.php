@@ -16,13 +16,20 @@ final class Notification
     private $title;
 
     /**
+     * @var array
+     */
+    private $data;
+
+    /**
      * @param string $body
      * @param string $title
+     * @param array $data
      */
-    public function __construct(string $body, string $title)
+    public function __construct(string $body, string $title, array $data = [])
     {
         $this->body = $body;
         $this->title = $title;
+        $this->data = $data;
     }
 
     /**
@@ -39,5 +46,13 @@ final class Notification
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 }
