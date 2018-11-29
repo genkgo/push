@@ -58,7 +58,7 @@ final class CloudMessaging
                     \json_encode([
                         'message' => [
                             'token' => $token,
-                            'data' => $notification->getData(),
+                            'data' => $this->convertDataToStrings($notification->getData()),
                             'notification' => [
                                 'body' => $notification->getBody(),
                                 'title' => $notification->getTitle(),
@@ -67,5 +67,22 @@ final class CloudMessaging
                     ])
                 )
             );
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    private function convertDataToStrings(array $data): array
+    {
+        $callback = function ($item) {
+            return (string)$item;
+        };
+
+        $func = function ($item) use (&$func, &$callback) {
+            return is_array($item) ? array_map($func, $item) : call_user_func($callback, $item);
+        };
+
+        return array_map($func, $data);
     }
 }
