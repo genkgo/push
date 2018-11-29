@@ -49,4 +49,10 @@ final class MessageTest extends AbstractTestCase
         $this->assertCount(1, $message2->getExtra());
         $this->assertCount(2, $message3->getExtra());
     }
+
+    public function testNoTitle()
+    {
+        $message = new Message(new Body('test'));
+        $this->assertEquals('', (string)$message->getTitle());
+    }
 }

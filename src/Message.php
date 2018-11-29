@@ -26,6 +26,7 @@ final class Message
     public function __construct(Body $body)
     {
         $this->body = $body;
+        $this->title = new Title('');
     }
 
     /**
