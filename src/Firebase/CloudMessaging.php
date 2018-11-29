@@ -80,9 +80,9 @@ final class CloudMessaging
         };
 
         $func = function ($item) use (&$func, &$callback) {
-            return is_array($item) ? array_map($func, $item) : call_user_func($callback, $item);
+            return \is_array($item) ? \array_map($func, $item) : \call_user_func($callback, $item);
         };
 
-        return array_map($func, $data);
+        return \array_map($func, $data);
     }
 }
