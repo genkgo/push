@@ -71,7 +71,8 @@ final class CloudMessaging
                     )
                 );
         } catch (ClientException $e) {
-            if ($e->getResponse()->getStatusCode() === 403) {
+            $response = $e->getResponse();
+            if ($response !== null && $response->getStatusCode() === 403) {
                 throw new ForbiddenToSendMessageException(
                     'Cannot send message due to access restriction:' . $e->getMessage(),
                     $e->getCode(),
