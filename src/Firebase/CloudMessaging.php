@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Genkgo\Push\Firebase;
 
+use Genkgo\Push\Exception\ForbiddenToSendMessageException;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 
 final class CloudMessaging
@@ -42,31 +44,43 @@ final class CloudMessaging
     {
         $authorizationHeader = \call_user_func($this->authorizationHeaderProvider);
 
-        $this->client
-            ->send(
-                new Request(
-                    'POST',
-                    \sprintf(
-                        '%s/projects/%s/messages:send',
-                        self::FCM_ENDPOINT,
-                        $projectId
-                    ),
-                    [
-                        'Content-Type' => 'application/json',
-                        'Authorization' => $authorizationHeader,
-                    ],
-                    \json_encode([
-                        'message' => [
-                            'token' => $token,
-                            'data' => $this->convertDataToStrings($notification->getData()),
-                            'notification' => [
-                                'body' => $notification->getBody(),
-                                'title' => $notification->getTitle(),
+        try {
+            $this->client
+                ->send(
+                    new Request(
+                        'POST',
+                        \sprintf(
+                            '%s/projects/%s/messages:send',
+                            self::FCM_ENDPOINT,
+                            $projectId
+                        ),
+                        [
+                            'Content-Type' => 'application/json',
+                            'Authorization' => $authorizationHeader,
+                        ],
+                        \json_encode([
+                            'message' => [
+                                'token' => $token,
+                                'data' => $this->convertDataToStrings($notification->getData()),
+                                'notification' => [
+                                    'body' => $notification->getBody(),
+                                    'title' => $notification->getTitle(),
+                                ]
                             ]
-                        ]
-                    ])
-                )
-            );
+                        ])
+                    )
+                );
+        } catch (ClientException $e) {
+            if ($e->getResponse()->getStatusCode() === 403) {
+                throw new ForbiddenToSendMessageException(
+                    'Cannot send message due to access restriction:' . $e->getMessage(),
+                    $e->getCode(),
+                    $e
+                );
+            }
+
+            throw $e;
+        }
     }
 
     /**

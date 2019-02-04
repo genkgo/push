@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace Genkgo\Push\Integration;
 
 use Genkgo\Push\AbstractTestCase;
+use Genkgo\Push\Exception\ForbiddenToSendMessageException;
 use Genkgo\Push\Firebase\AuthorizationHeaderProviderInterface;
 use Genkgo\Push\Firebase\CloudMessaging;
 use Genkgo\Push\Firebase\Notification;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 
 final class CloudMessagingTest extends AbstractTestCase
 {
@@ -47,6 +50,36 @@ final class CloudMessagingTest extends AbstractTestCase
         );
 
         $cloudMessaging = new CloudMessaging($client, $provider);
+        $cloudMessaging->send('project-xyz', 'token', $notification);
+    }
+
+    public function testForbidden()
+    {
+        $this->expectException(ForbiddenToSendMessageException::class);
+
+        $provider = $this->createMock(AuthorizationHeaderProviderInterface::class);
+        $provider
+            ->expects($this->at(0))
+            ->method('__invoke')
+            ->willReturn('Bearer test');
+
+        $client = $this->createMock(ClientInterface::class);
+        $client
+            ->expects($this->at(0))
+            ->method('send')
+            ->willReturnCallback(
+                function (Request $request) {
+                    throw new ClientException(
+                        'Forbidden',
+                        $request,
+                        new Response(403)
+                    );
+                }
+            );
+
+        $notification = new Notification('body', 'title');
+        $cloudMessaging = new CloudMessaging($client, $provider);
+
         $cloudMessaging->send('project-xyz', 'token', $notification);
     }
 }
