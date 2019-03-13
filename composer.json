@@ -9,7 +9,9 @@
         "guzzlehttp/guzzle": "^6.0"
     },
     "suggest": {
-        "lcobucci/jwt": "For Oauth2 authorization to FirebaseCM"
+        "lcobucci/jwt": "For Oauth2 authorization to FirebaseCM",
+        "ext/openssl": "For Apple certificate generation",
+        "ext-iconv" : "For Apple certificate generation"
     },
     "require-dev" : {
         "ext-openssl" : "*",

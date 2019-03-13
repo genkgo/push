@@ -71,7 +71,8 @@ final class CombinedCertificate
             (string)$this->signedCertificate,
             $out,
             $this->privateKey->asResource(),
-            $this->privateKey->getPassphrase()
+            $this->privateKey->getPassphrase(),
+            []
         );
 
         return $out;
