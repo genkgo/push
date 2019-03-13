@@ -62,4 +62,18 @@ final class CombinedCertificate
             new SignedCertificate($signedCertificate . '-' . PHP_EOL)
         );
     }
+
+    public function exportToP12(): string
+    {
+        $out = '';
+
+        \openssl_pkcs12_export(
+            (string)$this->signedCertificate,
+            $out,
+            $this->privateKey->asResource(),
+            $this->privateKey->getPassphrase()
+        );
+
+        return $out;
+    }
 }
