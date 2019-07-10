@@ -1,11 +1,11 @@
 {
     "name" : "genkgo/push",
-    "description": "Send push messages to Android, Apple and Windows using one interface. Bonus: generate Apple push certificates automatically",
+    "description": "Send push messages to Android and Apple using one interface.",
     "require" : {
-        "php" : "^7.1",
+        "php" : "^7.2",
         "ext-json" : "*",
         "php-gcm/php-gcm": "~1.1.1",
-        "apple/apn-push": "~2.2.2",
+        "apple/apn-push": "^3.0",
         "guzzlehttp/guzzle": "^6.0"
     },
     "suggest": {
@@ -16,9 +16,9 @@
     "require-dev" : {
         "ext-openssl" : "*",
         "ext-iconv" : "*",
-        "phpunit/phpunit": "^6.0",
-        "phpstan/phpstan": "^0.9",
-        "phpstan/phpstan-phpunit": "^0.9",
+        "phpunit/phpunit": "^8",
+        "phpstan/phpstan": "^0.11",
+        "phpstan/phpstan-phpunit": "^0.11",
         "friendsofphp/php-cs-fixer": "^2.9",
         "lcobucci/jwt": "^3.2"
     },
