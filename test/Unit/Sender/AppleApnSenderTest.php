@@ -17,7 +17,16 @@ final class AppleApnSenderTest extends AbstractTestCase
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
 
-        $sender = AppleApnSender::fromCertificate(\dirname(\dirname(__DIR__)) . '/Stubs/cert.pem', 'password');
+        $sender = AppleApnSender::fromCertificate(__DIR__ . '/../../Stubs/cert.pem', 'password');
+        $this->assertTrue($sender->supports($message, $recipient));
+    }
+
+    public function testToken()
+    {
+        $message = new Message(new Body('test'));
+        $recipient = new AppleDeviceRecipient('token');
+
+        $sender = AppleApnSender::fromToken(__DIR__ . '/../../Stubs/cert.pem', 'AB1234', 'Q12345', 'app.bundle.id');
         $this->assertTrue($sender->supports($message, $recipient));
     }
 

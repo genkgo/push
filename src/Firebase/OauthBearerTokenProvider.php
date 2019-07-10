@@ -6,6 +6,7 @@ namespace Genkgo\Push\Firebase;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInterface
@@ -37,19 +38,21 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
      */
     public function __invoke(): string
     {
-        $googleJson = \json_decode(\file_get_contents($this->serviceAccountFile), true);
+        $serviceAccount = \file_get_contents($this->serviceAccountFile);
+        if ($serviceAccount === false) {
+            throw new \UnexpectedValueException('Cannot read service account ' . $this->serviceAccountFile);
+        }
+
+        $googleJson = \json_decode($serviceAccount, true);
 
         $now = \time();
         $expiration = $now + (60 * 60);
         $builder = (new Builder())
-            ->setIssuer($googleJson['client_email'])
-            ->setIssuedAt($now)
-            ->setExpiration($expiration)
-            ->set('scope', 'https://www.googleapis.com/auth/cloud-platform')
-            ->setAudience(self::AUTH_ENDPOINT);
-
-        $builder = $builder->sign(new Sha256(), $googleJson['private_key']);
-        $token = (string)$builder->getToken();
+            ->issuedBy($googleJson['client_email'])
+            ->issuedAt($now)
+            ->expiresAt($expiration)
+            ->withClaim('scope', 'https://www.googleapis.com/auth/cloud-platform')
+            ->permittedFor(self::AUTH_ENDPOINT);
 
         $authResponse = (string)$this->client
             ->send(
@@ -61,7 +64,7 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
                     ],
                     \http_build_query([
                         'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                        'assertion' => $token
+                        'assertion' => (string)$builder->getToken(new Sha256(), new Key($googleJson['private_key']))
                     ])
                 )
             )

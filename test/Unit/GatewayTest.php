@@ -20,7 +20,7 @@ final class GatewayTest extends AbstractTestCase
 
         $sender = $this->createMock(SenderInterface::class);
         $sender->expects($this->at(0))->method('supports')->with($message, $recipient)->willReturn(true);
-        $sender->expects($this->at(1))->method('send')->with($message, $recipient)->willReturn(true);
+        $sender->expects($this->at(1))->method('send')->with($message, $recipient);
 
         $gateway = new Gateway([$sender]);
         $gateway->send($message, $recipient);

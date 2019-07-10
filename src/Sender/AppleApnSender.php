@@ -4,9 +4,16 @@ declare(strict_types=1);
 namespace Genkgo\Push\Sender;
 
 use Apple\ApnPush\Certificate\Certificate;
-use Apple\ApnPush\Notification\Connection;
-use Apple\ApnPush\Notification\Message as AppleMessage;
-use Apple\ApnPush\Notification\Notification;
+use Apple\ApnPush\Model\Alert;
+use Apple\ApnPush\Model\Aps;
+use Apple\ApnPush\Model\DeviceToken;
+use Apple\ApnPush\Model\Notification;
+use Apple\ApnPush\Model\Payload;
+use Apple\ApnPush\Model\Receiver;
+use Apple\ApnPush\Protocol\Http\Authenticator\CertificateAuthenticator;
+use Apple\ApnPush\Sender\Builder\Http20Builder;
+use Apple\ApnPush\Sender\SenderInterface as AppleSender;
+use Genkgo\Push\Apn\JwtAuthenticator;
 use Genkgo\Push\Message;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\RecipientInterface;
@@ -15,17 +22,30 @@ use Genkgo\Push\SenderInterface;
 final class AppleApnSender implements SenderInterface
 {
     /**
-     * @var Connection
+     * @var AppleSender
      */
-    private $connection;
+    private $sender;
 
     /**
-     * AppleApnSender constructor.
-     * @param Connection $connection
+     * @var string
      */
-    public function __construct(Connection $connection)
+    private $bundleId;
+
+    /**
+     * @var bool
+     */
+    private $sandbox;
+
+    /**
+     * @param AppleSender $sender
+     * @param string $bundleId
+     * @param bool $sandbox
+     */
+    public function __construct(AppleSender $sender, string $bundleId, bool $sandbox = false)
     {
-        $this->connection = $connection;
+        $this->sender = $sender;
+        $this->sandbox = $sandbox;
+        $this->bundleId = $bundleId;
     }
 
     /**
@@ -45,13 +65,19 @@ final class AppleApnSender implements SenderInterface
      */
     public function send(Message $message, RecipientInterface $recipient): void
     {
-        $appleMessage = new AppleMessage();
-        $appleMessage->setBody((string)$message->getBody());
-        $appleMessage->setDeviceToken($recipient->getToken());
-        $appleMessage->setCustomData($message->getExtra());
+        $alert = (new Alert())
+            ->withBody((string)$message->getBody())
+            ->withTitle((string)$message->getTitle());
 
-        $notification = new Notification($this->connection);
-        $notification->send($appleMessage);
+        $payload = new Payload(new Aps($alert));
+        foreach ($message->getExtra() as $key => $value) {
+            $payload = $payload->withCustomData((string)$key, $value);
+        }
+
+        $notification = new Notification($payload);
+        $receiver = new Receiver(new DeviceToken($recipient->getToken()), $this->bundleId);
+
+        $this->sender->send($receiver, $notification, $this->sandbox);
     }
 
     /**
@@ -62,6 +88,32 @@ final class AppleApnSender implements SenderInterface
      */
     public static function fromCertificate(string $certificate, string $passphrase, bool $sandboxMode = false): self
     {
-        return new self(new Connection(new Certificate($certificate, $passphrase), $sandboxMode));
+        // Create certificate and authenticator
+        $certificate = new Certificate($certificate, $passphrase);
+        $authenticator = new CertificateAuthenticator($certificate);
+
+        $builder = new Http20Builder($authenticator);
+        $sender = $builder->build();
+        return new self($sender, '', $sandboxMode);
+    }
+
+    /**
+     * @param string $token
+     * @param string $keyId
+     * @param string $teamId
+     * @param string $bundleId
+     * @param bool $sandboxMode
+     * @return AppleApnSender
+     */
+    public static function fromToken(
+        string $token,
+        string $keyId,
+        string $teamId,
+        string $bundleId,
+        bool $sandboxMode = false
+    ): self {
+        $builder = new Http20Builder(new JwtAuthenticator($token, $keyId, $teamId));
+        $sender = $builder->build();
+        return new self($sender, $bundleId, $sandboxMode);
     }
 }

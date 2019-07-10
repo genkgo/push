@@ -38,13 +38,27 @@ final class CloudMessaging
      * @param string $projectId
      * @param string $token
      * @param Notification $notification
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function send(string $projectId, string $token, Notification $notification): void
     {
         $authorizationHeader = \call_user_func($this->authorizationHeaderProvider);
 
         try {
+            $json = \json_encode([
+                'message' => [
+                    'token' => $token,
+                    'data' => $this->convertDataToStrings($notification->getData()),
+                    'notification' => [
+                        'body' => $notification->getBody(),
+                        'title' => $notification->getTitle(),
+                    ]
+                ]
+            ]);
+
+            if ($json === false) {
+                throw new \UnexpectedValueException('Cannot encode HTTP message');
+            }
+
             $this->client
                 ->send(
                     new Request(
@@ -58,16 +72,7 @@ final class CloudMessaging
                             'Content-Type' => 'application/json',
                             'Authorization' => $authorizationHeader,
                         ],
-                        \json_encode([
-                            'message' => [
-                                'token' => $token,
-                                'data' => $this->convertDataToStrings($notification->getData()),
-                                'notification' => [
-                                    'body' => $notification->getBody(),
-                                    'title' => $notification->getTitle(),
-                                ]
-                            ]
-                        ])
+                        $json
                     )
                 );
         } catch (ClientException $e) {
