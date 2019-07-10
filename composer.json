@@ -6,12 +6,8 @@
         "ext-json" : "*",
         "php-gcm/php-gcm": "~1.1.1",
         "apple/apn-push": "^3.0",
-        "guzzlehttp/guzzle": "^6.0"
-    },
-    "suggest": {
-        "lcobucci/jwt": "For Oauth2 authorization to FirebaseCM",
-        "ext/openssl": "For Apple certificate generation",
-        "ext-iconv" : "For Apple certificate generation"
+        "guzzlehttp/guzzle": "^6.0",
+        "lcobucci/jwt": "^3.3"
     },
     "require-dev" : {
         "ext-openssl" : "*",
@@ -19,8 +15,7 @@
         "phpunit/phpunit": "^8",
         "phpstan/phpstan": "^0.11",
         "phpstan/phpstan-phpunit": "^0.11",
-        "friendsofphp/php-cs-fixer": "^2.9",
-        "lcobucci/jwt": "^3.3"
+        "friendsofphp/php-cs-fixer": "^2.9"
     },
     "autoload" : {
         "psr-4" : {
