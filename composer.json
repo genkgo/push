@@ -7,7 +7,7 @@
         "php-gcm/php-gcm": "~1.1.1",
         "apple/apn-push": "^3.0",
         "guzzlehttp/guzzle": "^6.0",
-        "lcobucci/jwt": "^3.3"
+        "lcobucci/jwt": "^3.3.1"
     },
     "require-dev" : {
         "phpunit/phpunit": "^8",
