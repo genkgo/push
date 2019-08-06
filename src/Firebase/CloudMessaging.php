@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Genkgo\Push\Firebase;
 
 use Genkgo\Push\Exception\ForbiddenToSendMessageException;
+use Genkgo\Push\Exception\UnknownRecipientException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
@@ -75,6 +76,14 @@ final class CloudMessaging
             if ($response !== null && $response->getStatusCode() === 403) {
                 throw new ForbiddenToSendMessageException(
                     'Cannot send message due to access restriction:' . $e->getMessage(),
+                    $e->getCode(),
+                    $e
+                );
+            }
+
+            if ($response !== null && $response->getStatusCode() === 404) {
+                throw new UnknownRecipientException(
+                    'Cannot send message, unknown recipient:' . $e->getMessage(),
                     $e->getCode(),
                     $e
                 );
