@@ -13,4 +13,10 @@ final class FirebaseRecipientTest extends AbstractTestCase
         $recipient = new FirebaseRecipient('test');
         $this->assertEquals('test', $recipient->getToken());
     }
+
+    public function testFromString()
+    {
+        $recipient = FirebaseRecipient::fromString('test');
+        $this->assertInstanceOf(FirebaseRecipient::class, $recipient);
+    }
 }

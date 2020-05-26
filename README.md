@@ -1,5 +1,5 @@
 # Genkgo.Push
-Send push messages to Android, Apple and Firebase using one interface 
+Send push messages to Android, Apple and Firebase using one interface
 
 ### Installation
 
@@ -30,7 +30,6 @@ use Genkgo\Push\Firebase\CloudMessaging;
 use Genkgo\Push\Gateway;
 use Genkgo\Push\Message;
 use Genkgo\Push\Sender\FirebaseSender;
-use Genkgo\Push\Sender\GoogleGcmSender;
 use Genkgo\Push\Sender\AppleApnSender;
 use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
@@ -38,7 +37,6 @@ use Genkgo\Push\Recipient\FirebaseRecipient;
 
 // construct the gateway, using the different senders
 $gateway = new Gateway([
-    GoogleGcmSender::fromApiKey('API key obtained through the Google API Console'),
     AppleApnSender::fromCertificate('/location/to/cert.pem', 'passphrase'),
     new FirebaseSender(new CloudMessaging($guzzleClient, $auth), 'fcm-project-id')
 ]);
