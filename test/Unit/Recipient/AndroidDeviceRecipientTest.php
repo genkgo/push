@@ -13,4 +13,10 @@ final class AndroidDeviceRecipientTest extends AbstractTestCase
         $recipient = new AndroidDeviceRecipient('test');
         $this->assertEquals('test', $recipient->getToken());
     }
+
+    public function testFromString()
+    {
+        $recipient = AndroidDeviceRecipient::fromString('test');
+        $this->assertInstanceOf(AndroidDeviceRecipient::class, $recipient);
+    }
 }
