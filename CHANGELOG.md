@@ -8,8 +8,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 
+## [3.0.0] - 2020-05-27
 
-## [2.0.0] - ????-??-??
+### Added
+
+- Apple APN Token based sender
+- PHP 7.4 support
+
+### Removed
+
+- Removed Apple APN certificate generation
+
+
+## [2.0.0] - 2018-11-27
 
 ### Added
 
