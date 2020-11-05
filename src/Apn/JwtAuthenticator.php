@@ -19,12 +19,12 @@ final class JwtAuthenticator implements AuthenticatorInterface
     /**
      * @var string
      */
-    private $teamId;
+    private $keyId;
 
     /**
      * @var string
      */
-    private $keyId;
+    private $teamId;
 
     /**
      * @param string $token
@@ -34,8 +34,8 @@ final class JwtAuthenticator implements AuthenticatorInterface
     public function __construct(string $token, string $keyId, string $teamId)
     {
         $this->token = $token;
-        $this->teamId = $teamId;
         $this->keyId = $keyId;
+        $this->teamId = $teamId;
     }
 
     /**
@@ -53,7 +53,7 @@ final class JwtAuthenticator implements AuthenticatorInterface
             ->issuedBy($this->teamId)
             ->issuedAt($now)
             ->expiresAt($expiration)
-            ->withClaim('kid', $this->keyId);
+            ->withHeader('kid', $this->keyId);
 
         if (!\file_exists($this->token)) {
             throw new \UnexpectedValueException('Cannot find token ' . $this->token . ', invalid path');
@@ -66,6 +66,6 @@ final class JwtAuthenticator implements AuthenticatorInterface
 
         $token = $builder->getToken(new Sha256(), new Key($keyContent));
 
-        return $request->withHeader('authorization', \sprintf('bearer %s', (string)$token));
+        return $request->withHeader('Authorization', \sprintf('Bearer %s', (string)$token));
     }
 }
