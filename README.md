@@ -37,7 +37,7 @@ use Genkgo\Push\Recipient\FirebaseRecipient;
 
 // construct the gateway, using the different senders
 $gateway = new Gateway([
-    AppleApnSender::fromCertificate('/location/to/cert.pem', 'passphrase'),
+    AppleApnSender::fromToken('/location/to/key.p8', 'keyId', 'teamId', 'bundleId'),
     new FirebaseSender(new CloudMessaging($guzzleClient, $auth), 'fcm-project-id')
 ]);
 
