@@ -10,20 +10,20 @@ use Genkgo\Push\Title;
 
 final class MessageTest extends AbstractTestCase
 {
-    public function testImmutability()
+    public function testImmutability(): void
     {
         $message = new Message(new Body('test'));
         $this->assertNotSame($message, $message->withTitle(new Title('test')));
     }
 
-    public function testBody()
+    public function testBody(): void
     {
         $body = new Body('test');
         $message = new Message($body);
         $this->assertSame('test', (string)$message->getBody());
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $title1 = new Title('test');
         $title2 = new Title('new test');
@@ -37,7 +37,7 @@ final class MessageTest extends AbstractTestCase
         $this->assertSame($title2, $message2->getTitle());
     }
 
-    public function testExtra()
+    public function testExtra(): void
     {
         $message = new Message(new Body('test'));
         $message1 = $message->withExtra('localId', 1);
@@ -50,7 +50,7 @@ final class MessageTest extends AbstractTestCase
         $this->assertCount(2, $message3->getExtra());
     }
 
-    public function testNoTitle()
+    public function testNoTitle(): void
     {
         $message = new Message(new Body('test'));
         $this->assertEquals('', (string)$message->getTitle());

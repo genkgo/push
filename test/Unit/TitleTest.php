@@ -8,7 +8,7 @@ use Genkgo\Push\Title;
 
 final class TitleTest extends AbstractTestCase
 {
-    public function testToString()
+    public function testToString(): void
     {
         $message = new Title('test');
         $this->assertEquals('test', (string)$message);

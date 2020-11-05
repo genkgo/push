@@ -15,7 +15,7 @@ use GuzzleHttp\Psr7\Response;
 
 final class CloudMessagingTest extends AbstractTestCase
 {
-    public function testDataIsString()
+    public function testDataIsString(): void
     {
         $provider = $this->createMock(AuthorizationHeaderProviderInterface::class);
         $provider
@@ -53,7 +53,7 @@ final class CloudMessagingTest extends AbstractTestCase
         $cloudMessaging->send('project-xyz', 'token', $notification);
     }
 
-    public function testForbidden()
+    public function testForbidden(): void
     {
         $this->expectException(ForbiddenToSendMessageException::class);
 

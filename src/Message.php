@@ -16,7 +16,7 @@ final class Message
     private $title;
 
     /**
-     * @var array
+     * @var array<mixed, mixed>
      */
     private $extra = [];
 
@@ -46,7 +46,7 @@ final class Message
     }
 
     /**
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function getExtra(): array
     {

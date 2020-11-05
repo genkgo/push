@@ -99,8 +99,8 @@ final class CloudMessaging
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param array<mixed, mixed> $data
+     * @return array<string, mixed>
      */
     private function convertDataToStrings(array $data): array
     {

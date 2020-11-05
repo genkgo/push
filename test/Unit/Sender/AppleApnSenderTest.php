@@ -12,7 +12,7 @@ use Genkgo\Push\Sender\AppleApnSender;
 
 final class AppleApnSenderTest extends AbstractTestCase
 {
-    public function testSupports()
+    public function testSupports(): void
     {
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
@@ -21,7 +21,7 @@ final class AppleApnSenderTest extends AbstractTestCase
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
-    public function testToken()
+    public function testToken(): void
     {
         $message = new Message(new Body('test'));
         $recipient = new AppleDeviceRecipient('token');
@@ -30,7 +30,7 @@ final class AppleApnSenderTest extends AbstractTestCase
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
-    public function testNotSupports()
+    public function testNotSupports(): void
     {
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');

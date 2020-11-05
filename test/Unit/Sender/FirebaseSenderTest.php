@@ -15,7 +15,7 @@ use GuzzleHttp\ClientInterface;
 
 final class FirebaseSenderTest extends AbstractTestCase
 {
-    public function testSupports()
+    public function testSupports(): void
     {
         $message = new Message(new Body('test'));
         $recipient = new FirebaseRecipient('token');
@@ -27,7 +27,7 @@ final class FirebaseSenderTest extends AbstractTestCase
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
-    public function testNotSupports()
+    public function testNotSupports(): void
     {
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');

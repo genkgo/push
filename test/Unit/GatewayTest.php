@@ -13,7 +13,7 @@ use Genkgo\Push\SenderInterface;
 
 final class GatewayTest extends AbstractTestCase
 {
-    public function testSend()
+    public function testSend(): void
     {
         $message = new Message(new Body('test'));
         $recipient = new AndroidDeviceRecipient('token');
@@ -26,7 +26,7 @@ final class GatewayTest extends AbstractTestCase
         $gateway->send($message, $recipient);
     }
 
-    public function testExceptionUnsupportedSender()
+    public function testExceptionUnsupportedSender(): void
     {
         $this->expectException(UnsupportedMessageRecipient::class);
 
