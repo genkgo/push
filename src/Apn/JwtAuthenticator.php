@@ -43,7 +43,7 @@ final class JwtAuthenticator implements AuthenticatorInterface
      * @param string $teamId
      * @param string $refreshAfter
      */
-    public function __construct(string $token, string $keyId, string $teamId, string $refreshAfter = 'PT20M')
+    public function __construct(string $token, string $keyId, string $teamId, string $refreshAfter = 'PT30M')
     {
         $this->token = $token;
         $this->keyId = $keyId;
