@@ -8,6 +8,7 @@ use Apple\ApnPush\Protocol\Http\Request;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Ecdsa\Sha256;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Token;
 
 final class JwtAuthenticator implements AuthenticatorInterface
 {
@@ -27,15 +28,69 @@ final class JwtAuthenticator implements AuthenticatorInterface
     private $teamId;
 
     /**
+     * @var string
+     */
+    private $refreshAfter;
+
+    /**
+     * @var \Iterator<int, Token>
+     */
+    private $tokenGenerator;
+
+    /**
      * @param string $token
      * @param string $keyId
      * @param string $teamId
+     * @param string $refreshAfter
      */
-    public function __construct(string $token, string $keyId, string $teamId)
+    public function __construct(string $token, string $keyId, string $teamId, string $refreshAfter = 'PT30M')
     {
         $this->token = $token;
         $this->keyId = $keyId;
         $this->teamId = $teamId;
+        $this->refreshAfter = $refreshAfter;
+        $this->tokenGenerator = $this->newGenerator();
+    }
+
+    /**
+     * @return \Iterator<int, Token>
+     */
+    private function newGenerator(): \Iterator
+    {
+        $now = new \DateTimeImmutable();
+
+        $newToken = function () use (&$now) {
+            $expiration = $now->add(new \DateInterval('PT1H'));
+
+            $builder = (new Builder())
+                ->issuedBy($this->teamId)
+                ->issuedAt($now)
+                ->expiresAt($expiration)
+                ->withHeader('kid', $this->keyId);
+
+            if (!\file_exists($this->token)) {
+                throw new \UnexpectedValueException('Cannot find token ' . $this->token . ', invalid path');
+            }
+
+            $keyContent = \file_get_contents($this->token);
+            if ($keyContent === false) {
+                throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', file not readable?');
+            }
+
+            return $builder->getToken(new Sha256(), new Key($keyContent));
+        };
+
+        $lastToken = $newToken();
+        while (true) {
+            $newNow = new \DateTimeImmutable();
+
+            if ($newNow > $now->add(new \DateInterval($this->refreshAfter))) {
+                $now = $newNow;
+                $lastToken = $newToken();
+            }
+
+            yield $lastToken;
+        }
     }
 
     /**
@@ -47,25 +102,7 @@ final class JwtAuthenticator implements AuthenticatorInterface
      */
     public function authenticate(Request $request): Request
     {
-        $now = \time();
-        $expiration = $now + (60 * 60);
-        $builder = (new Builder())
-            ->issuedBy($this->teamId)
-            ->issuedAt($now)
-            ->expiresAt($expiration)
-            ->withHeader('kid', $this->keyId);
-
-        if (!\file_exists($this->token)) {
-            throw new \UnexpectedValueException('Cannot find token ' . $this->token . ', invalid path');
-        }
-
-        $keyContent = \file_get_contents($this->token);
-        if ($keyContent === false) {
-            throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', file not readable?');
-        }
-
-        $token = $builder->getToken(new Sha256(), new Key($keyContent));
-
-        return $request->withHeader('Authorization', \sprintf('Bearer %s', (string)$token));
+        $this->tokenGenerator->next();
+        return $request->withHeader('Authorization', \sprintf('Bearer %s', $this->tokenGenerator->current()));
     }
 }

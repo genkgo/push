@@ -7,9 +7,7 @@ Requires PHP 7.2 or later. It is installable and autoloadable via Composer as [g
 
 ### Quality
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/genkgo/push/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/genkgo/push/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/genkgo/push/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/genkgo/push/?branch=master)
-[![Build Status](https://travis-ci.org/genkgo/push.png?branch=master)](https://travis-ci.org/genkgo/push)
+![workflow code check](https://github.com/genkgo/push/workflows/code%20check/badge.svg)
 
 To run the unit tests at the command line, issue `phpunit -c tests/`. [PHPUnit](http://phpunit.de/manual/) is required.
 
