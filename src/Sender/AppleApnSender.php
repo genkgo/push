@@ -4,6 +4,28 @@ declare(strict_types=1);
 namespace Genkgo\Push\Sender;
 
 use Apple\ApnPush\Certificate\Certificate;
+use Apple\ApnPush\Exception\SendNotification\BadCertificateEnvironmentException;
+use Apple\ApnPush\Exception\SendNotification\BadCertificateException;
+use Apple\ApnPush\Exception\SendNotification\BadDeviceTokenException;
+use Apple\ApnPush\Exception\SendNotification\BadExpirationDateException;
+use Apple\ApnPush\Exception\SendNotification\BadMessageIdException;
+use Apple\ApnPush\Exception\SendNotification\BadPathException;
+use Apple\ApnPush\Exception\SendNotification\BadPriorityException;
+use Apple\ApnPush\Exception\SendNotification\BadTopicException;
+use Apple\ApnPush\Exception\SendNotification\DeviceTokenNotForTopicException;
+use Apple\ApnPush\Exception\SendNotification\DuplicateHeadersException;
+use Apple\ApnPush\Exception\SendNotification\ExpiredProviderTokenException;
+use Apple\ApnPush\Exception\SendNotification\ForbiddenException;
+use Apple\ApnPush\Exception\SendNotification\IdleTimeoutException;
+use Apple\ApnPush\Exception\SendNotification\InvalidProviderTokenException;
+use Apple\ApnPush\Exception\SendNotification\MethodNotAllowedException;
+use Apple\ApnPush\Exception\SendNotification\MissingDeviceTokenException;
+use Apple\ApnPush\Exception\SendNotification\MissingProviderTokenException;
+use Apple\ApnPush\Exception\SendNotification\MissingTopicException;
+use Apple\ApnPush\Exception\SendNotification\PayloadEmptyException;
+use Apple\ApnPush\Exception\SendNotification\TopicDisallowedException;
+use Apple\ApnPush\Exception\SendNotification\UndefinedErrorException;
+use Apple\ApnPush\Exception\SendNotification\UnregisteredException;
 use Apple\ApnPush\Model\Alert;
 use Apple\ApnPush\Model\Aps;
 use Apple\ApnPush\Model\DeviceToken;
@@ -14,6 +36,11 @@ use Apple\ApnPush\Protocol\Http\Authenticator\CertificateAuthenticator;
 use Apple\ApnPush\Sender\Builder\Http20Builder;
 use Apple\ApnPush\Sender\SenderInterface as AppleSender;
 use Genkgo\Push\Apn\JwtAuthenticator;
+use Genkgo\Push\Exception\ConnectionException;
+use Genkgo\Push\Exception\ForbiddenToSendMessageException;
+use Genkgo\Push\Exception\InvalidMessageException;
+use Genkgo\Push\Exception\InvalidRecipientException;
+use Genkgo\Push\Exception\UnknownRecipientException;
 use Genkgo\Push\Message;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\RecipientInterface;
@@ -77,7 +104,53 @@ final class AppleApnSender implements SenderInterface
         $notification = new Notification($payload);
         $receiver = new Receiver(new DeviceToken($recipient->getToken()), $this->bundleId);
 
-        $this->sender->send($receiver, $notification, $this->sandbox);
+        try {
+            $this->sender->send($receiver, $notification, $this->sandbox);
+        } catch (UnregisteredException $e) {
+            throw new UnknownRecipientException($e->getMessage());
+        } catch (BadDeviceTokenException $e) {
+            throw new InvalidRecipientException($e->getMessage());
+        } catch (BadExpirationDateException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (BadMessageIdException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (BadPriorityException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (BadTopicException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (DeviceTokenNotForTopicException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (DuplicateHeadersException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (IdleTimeoutException $e) {
+            throw new ConnectionException($e->getMessage());
+        } catch (MissingDeviceTokenException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (MissingTopicException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (PayloadEmptyException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (TopicDisallowedException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (BadCertificateException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (BadCertificateEnvironmentException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (ExpiredProviderTokenException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (ForbiddenException $e) {
+            throw new ForbiddenToSendMessageException($e->getMessage());
+        } catch (InvalidProviderTokenException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (MissingProviderTokenException $e) {
+            throw new InvalidMessageException($e->getMessage());
+        } catch (BadPathException $e) {
+            throw new ConnectionException($e->getMessage());
+        } catch (MethodNotAllowedException $e) {
+            throw new ConnectionException($e->getMessage());
+        } catch (UndefinedErrorException $e) {
+            throw new ConnectionException($e->getMessage());
+        }
     }
 
     /**
