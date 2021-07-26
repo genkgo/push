@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [3.1.0] - 2021-07-26
+
+### Changed
+
+- Dropped PHP7.2 support
+- Guzzle dependency upgrade to 7
+
+
+## [3.0.3] - 2021-02-10
+
+### Fixed
+
+- Fix exception conversion
+
+
 ## [3.0.2] - 2021-02-10
 
 ### Fixed
