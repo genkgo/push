@@ -19,11 +19,13 @@ final class GatewayTest extends AbstractTestCase
         $recipient = new AndroidDeviceRecipient('token');
 
         $sender = $this->createMock(SenderInterface::class);
-        $sender->expects($this->at(0))->method('supports')->with($message, $recipient)->willReturn(true);
-        $sender->expects($this->at(1))->method('send')->with($message, $recipient);
+        $sender->method('supports')->with($message, $recipient)->willReturn(true);
+        $sender->method('send')->with($message, $recipient);
 
         $gateway = new Gateway([$sender]);
         $gateway->send($message, $recipient);
+
+        $this->addToAssertionCount(1);
     }
 
     public function testExceptionUnsupportedSender(): void
@@ -34,7 +36,7 @@ final class GatewayTest extends AbstractTestCase
         $recipient = new AndroidDeviceRecipient('token');
 
         $sender = $this->createMock(SenderInterface::class);
-        $sender->expects($this->at(0))->method('supports')->with($message, $recipient)->willReturn(false);
+        $sender->method('supports')->with($message, $recipient)->willReturn(false);
 
         $gateway = new Gateway([$sender]);
         $gateway->send($message, $recipient);

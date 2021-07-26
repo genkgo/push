@@ -19,13 +19,11 @@ final class CloudMessagingTest extends AbstractTestCase
     {
         $provider = $this->createMock(AuthorizationHeaderProviderInterface::class);
         $provider
-            ->expects($this->at(0))
             ->method('__invoke')
             ->willReturn('Bearer test');
 
         $client = $this->createMock(ClientInterface::class);
         $client
-            ->expects($this->at(0))
             ->method('send')
             ->with(
                 $this->callback(
@@ -59,13 +57,11 @@ final class CloudMessagingTest extends AbstractTestCase
 
         $provider = $this->createMock(AuthorizationHeaderProviderInterface::class);
         $provider
-            ->expects($this->at(0))
             ->method('__invoke')
             ->willReturn('Bearer test');
 
         $client = $this->createMock(ClientInterface::class);
         $client
-            ->expects($this->at(0))
             ->method('send')
             ->willReturnCallback(
                 function (Request $request) {
