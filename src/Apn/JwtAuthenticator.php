@@ -6,8 +6,10 @@ namespace Genkgo\Push\Apn;
 use Apple\ApnPush\Protocol\Http\Authenticator\AuthenticatorInterface;
 use Apple\ApnPush\Protocol\Http\Request;
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Ecdsa\Sha256;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 
 final class JwtAuthenticator implements AuthenticatorInterface
@@ -60,9 +62,19 @@ final class JwtAuthenticator implements AuthenticatorInterface
         $now = new \DateTimeImmutable();
 
         $newToken = function () use (&$now) {
+            $keyContent = \file_get_contents($this->token);
+            if ($keyContent === false) {
+                throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', file not readable?');
+            }
+
+            $configuration = Configuration::forSymmetricSigner(
+                Sha256::create(),
+                InMemory::plainText($keyContent)
+            );
+
             $expiration = $now->add(new \DateInterval('PT1H'));
 
-            $builder = (new Builder())
+            $builder = $configuration->builder()
                 ->issuedBy($this->teamId)
                 ->issuedAt($now)
                 ->expiresAt($expiration)
@@ -72,12 +84,7 @@ final class JwtAuthenticator implements AuthenticatorInterface
                 throw new \UnexpectedValueException('Cannot find token ' . $this->token . ', invalid path');
             }
 
-            $keyContent = \file_get_contents($this->token);
-            if ($keyContent === false) {
-                throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', file not readable?');
-            }
-
-            return $builder->getToken(new Sha256(), new Key($keyContent));
+            return $builder->getToken($configuration->signer(), $configuration->signingKey());
         };
 
         $lastToken = $newToken();
@@ -103,6 +110,6 @@ final class JwtAuthenticator implements AuthenticatorInterface
     public function authenticate(Request $request): Request
     {
         $this->tokenGenerator->next();
-        return $request->withHeader('Authorization', \sprintf('Bearer %s', $this->tokenGenerator->current()));
+        return $request->withHeader('Authorization', \sprintf('Bearer %s', $this->tokenGenerator->current()->toString()));
     }
 }

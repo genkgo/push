@@ -6,7 +6,9 @@ namespace Genkgo\Push\Firebase;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInterface
@@ -44,10 +46,15 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
         }
 
         $googleJson = \json_decode($serviceAccount, true);
+        $configuration = Configuration::forSymmetricSigner(
+            new Sha256(),
+            InMemory::plainText($googleJson['private_key'])
+        );
 
-        $now = \time();
-        $expiration = $now + (60 * 60);
-        $builder = (new Builder())
+        $now = new \DateTimeImmutable();
+        $expiration = $now->add(new \DateInterval('PT' . (60 * 60) . 'S'));
+
+        $builder = $configuration->builder()
             ->issuedBy($googleJson['client_email'])
             ->issuedAt($now)
             ->expiresAt($expiration)
@@ -64,7 +71,10 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
                     ],
                     \http_build_query([
                         'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                        'assertion' => (string)$builder->getToken(new Sha256(), new Key($googleJson['private_key']))
+                        'assertion' => $builder->getToken(
+                            $configuration->signer(),
+                            $configuration->signingKey()
+                        )->toString()
                     ])
                 )
             )
