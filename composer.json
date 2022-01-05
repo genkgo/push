@@ -2,7 +2,7 @@
     "name" : "genkgo/push",
     "description": "Send push messages to Android and Apple using one interface.",
     "require" : {
-        "php" : "^7.4",
+        "php": "^7.4 || ~8.0.0",
         "ext-json" : "*",
         "apple/apn-push": "^3.0",
         "guzzlehttp/guzzle": "^7.0",
