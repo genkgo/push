@@ -23,6 +23,10 @@ final class Gateway
     /**
      * @param Message $message
      * @param RecipientInterface $recipient
+     * @throws Exception\ForbiddenToSendMessageException
+     * @throws Exception\InvalidMessageException
+     * @throws Exception\InvalidRecipientException
+     * @throws Exception\UnknownRecipientException
      * @throws UnsupportedMessageRecipient
      */
     public function send(Message $message, RecipientInterface $recipient): void
