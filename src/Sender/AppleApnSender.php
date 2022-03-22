@@ -102,54 +102,59 @@ final class AppleApnSender implements SenderInterface
         }
 
         $notification = new Notification($payload);
-        $receiver = new Receiver(new DeviceToken($recipient->getToken()), $this->bundleId);
+
+        try {
+            $receiver = new Receiver(new DeviceToken($recipient->getToken()), $this->bundleId);
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidRecipientException($e->getMessage(), $e->getCode(), $e);
+        }
 
         try {
             $this->sender->send($receiver, $notification, $this->sandbox);
         } catch (UnregisteredException $e) {
-            throw new UnknownRecipientException($e->getMessage());
+            throw new UnknownRecipientException($e->getMessage(), $e->getCode(), $e);
         } catch (BadDeviceTokenException $e) {
-            throw new InvalidRecipientException($e->getMessage());
+            throw new InvalidRecipientException($e->getMessage(), $e->getCode(), $e);
         } catch (BadExpirationDateException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (BadMessageIdException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (BadPriorityException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (BadTopicException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (DeviceTokenNotForTopicException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (DuplicateHeadersException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (IdleTimeoutException $e) {
-            throw new ConnectionException($e->getMessage());
+            throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
         } catch (MissingDeviceTokenException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (MissingTopicException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (PayloadEmptyException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (TopicDisallowedException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (BadCertificateException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (BadCertificateEnvironmentException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (ExpiredProviderTokenException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (ForbiddenException $e) {
-            throw new ForbiddenToSendMessageException($e->getMessage());
+            throw new ForbiddenToSendMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (InvalidProviderTokenException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (MissingProviderTokenException $e) {
-            throw new InvalidMessageException($e->getMessage());
+            throw new InvalidMessageException($e->getMessage(), $e->getCode(), $e);
         } catch (BadPathException $e) {
-            throw new ConnectionException($e->getMessage());
+            throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
         } catch (MethodNotAllowedException $e) {
-            throw new ConnectionException($e->getMessage());
+            throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
         } catch (UndefinedErrorException $e) {
-            throw new ConnectionException($e->getMessage());
+            throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
