@@ -67,6 +67,10 @@ final class JwtAuthenticator implements AuthenticatorInterface
                 throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', file not readable?');
             }
 
+            if ($keyContent === '') {
+                throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', empty file');
+            }
+
             $configuration = Configuration::forSymmetricSigner(
                 Sha256::create(),
                 InMemory::plainText($keyContent)
