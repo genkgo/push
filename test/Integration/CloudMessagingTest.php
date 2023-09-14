@@ -29,9 +29,9 @@ final class CloudMessagingTest extends AbstractTestCase
                 $this->callback(
                     function (Request $request) {
                         $body = \json_decode((string)$request->getBody(), true);
-                        $this->assertSame("1", $body['message']['data']['true']);
-                        $this->assertSame("", $body['message']['data']['false']);
-                        $this->assertSame("1815", $body['message']['data']['int']);
+                        $this->assertSame("1", $body['message']['data']['true']); // @phpstan-ignore-line
+                        $this->assertSame("", $body['message']['data']['false']); // @phpstan-ignore-line
+                        $this->assertSame("1815", $body['message']['data']['int']); // @phpstan-ignore-line
                         return true;
                     }
                 )

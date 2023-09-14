@@ -99,8 +99,8 @@ final class CloudMessaging
     }
 
     /**
-     * @param array<mixed, mixed> $data
-     * @return array<string, mixed>
+     * @param array<string|int, mixed> $data
+     * @return array<string|int, string>
      */
     private function convertDataToStrings(array $data): array
     {
@@ -112,6 +112,8 @@ final class CloudMessaging
             return \is_array($item) ? \array_map($func, $item) : \call_user_func($callback, $item);
         };
 
-        return \array_map($func, $data);
+        /** @var array<string|int, string> $result */
+        $result = \array_map($func, $data);
+        return $result;
     }
 }

@@ -78,7 +78,7 @@ final class FirebaseSender implements SenderInterface
                 $responseText = (string)$response->getBody();
                 $responseJson = \json_decode($responseText, true);
 
-                if ($responseJson && isset($responseJson['error']['message'])) {
+                if ($responseJson && \is_array($responseJson) && isset($responseJson['error']['message'])) {
                     $error = $responseJson['error']['message'];
                 } else {
                     $error = $e->getMessage();

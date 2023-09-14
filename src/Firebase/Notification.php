@@ -16,14 +16,14 @@ final class Notification
     private $title;
 
     /**
-     * @var array<mixed, mixed>
+     * @var array<string|int, mixed>
      */
     private $data;
 
     /**
      * @param string $body
      * @param string $title
-     * @param array<mixed, mixed> $data
+     * @param array<string|int, mixed> $data
      */
     public function __construct(string $body, string $title, array $data = [])
     {
@@ -49,7 +49,7 @@ final class Notification
     }
 
     /**
-     * @return array<mixed, mixed>
+     * @return array<string|int, mixed>
      */
     public function getData(): array
     {

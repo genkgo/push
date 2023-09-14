@@ -92,7 +92,7 @@ final class JwtAuthenticator implements AuthenticatorInterface
         };
 
         $lastToken = $newToken();
-        while (true) {
+        while (true) { // @phpstan-ignore-line
             $newNow = new \DateTimeImmutable();
 
             if ($newNow > $now->add(new \DateInterval($this->refreshAfter))) {

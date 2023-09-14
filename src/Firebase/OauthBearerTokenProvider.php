@@ -46,6 +46,14 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
         }
 
         $googleJson = \json_decode($serviceAccount, true);
+        if (!$googleJson || !\is_array($googleJson)) {
+            throw new \UnexpectedValueException('Invalid service account file ' . $this->serviceAccountFile . ' passed, cannot decode json.');
+        }
+
+        if (!\array_key_exists('private_key', $googleJson)) {
+            throw new \UnexpectedValueException('Expecting key `private_key` in service account.');
+        }
+
         $configuration = Configuration::forSymmetricSigner(
             new Sha256(),
             InMemory::plainText($googleJson['private_key'])
@@ -81,6 +89,11 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
             ->getBody();
 
         $authTokens = \json_decode($authResponse, true);
+
+        if (!$authTokens || !\is_array($authTokens) || !\array_key_exists('private_key', $authTokens)) {
+            throw new \UnexpectedValueException('Expecting key `access_token` from Oauth request.');
+        }
+
         return 'Bearer ' . $authTokens['access_token'];
     }
 }
