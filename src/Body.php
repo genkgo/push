@@ -3,24 +3,12 @@ declare(strict_types=1);
 
 namespace Genkgo\Push;
 
-final class Body
+final readonly class Body
 {
-    /**
-     * @var string
-     */
-    private $body;
-
-    /**
-     * @param string $body
-     */
-    public function __construct(string $body)
+    public function __construct(private string $body)
     {
-        $this->body = $body;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->body;

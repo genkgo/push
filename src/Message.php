@@ -5,48 +5,29 @@ namespace Genkgo\Push;
 
 final class Message
 {
-    /**
-     * @var Body
-     */
-    private $body;
+    private Title $title;
 
-    /**
-     * @var Title
-     */
-    private $title;
+    /** @var array<int|string, string|int|float|bool|array<int|string, string|int|float|bool>> */
+    private array $extra;
 
-    /**
-     * @var array<mixed, mixed>
-     */
-    private $extra = [];
-
-    /**
-     * @param Body $body
-     */
-    public function __construct(Body $body)
+    public function __construct(private readonly Body $body)
     {
-        $this->body = $body;
         $this->title = new Title('');
+        $this->extra = [];
     }
 
-    /**
-     * @return Body
-     */
     public function getBody(): Body
     {
         return $this->body;
     }
 
-    /**
-     * @return Title
-     */
     public function getTitle(): Title
     {
         return $this->title;
     }
 
     /**
-     * @return array<mixed, mixed>
+     * @return array<int|string, string|int|float|bool|array<int|string, string|int|float|bool>>
      */
     public function getExtra(): array
     {
@@ -65,11 +46,9 @@ final class Message
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $value
-     * @return Message
+     * @param string|int|float|bool|array<int|string, string|int|float|bool> $value
      */
-    public function withExtra($key, $value): self
+    public function withExtra(string|int $key, mixed $value): self
     {
         $clone = clone $this;
         $clone->extra[$key] = $value;

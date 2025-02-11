@@ -10,17 +10,9 @@ use Genkgo\Push\Exception\UnknownRecipientException;
 
 interface SenderInterface
 {
-    /**
-     * @param Message $message
-     * @param RecipientInterface $recipient
-     * @return bool
-     */
     public function supports(Message $message, RecipientInterface $recipient): bool;
 
     /**
-     * @param Message $message
-     * @param RecipientInterface $recipient
-     * @return void
      * @throws ForbiddenToSendMessageException
      * @throws InvalidMessageException
      * @throws InvalidRecipientException

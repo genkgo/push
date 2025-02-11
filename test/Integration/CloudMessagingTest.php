@@ -8,10 +8,12 @@ use Genkgo\Push\Exception\ForbiddenToSendMessageException;
 use Genkgo\Push\Firebase\AuthorizationHeaderProviderInterface;
 use Genkgo\Push\Firebase\CloudMessaging;
 use Genkgo\Push\Firebase\Notification;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class CloudMessagingTest extends AbstractTestCase
 {
@@ -24,10 +26,10 @@ final class CloudMessagingTest extends AbstractTestCase
 
         $client = $this->createMock(ClientInterface::class);
         $client
-            ->method('send')
+            ->method('sendRequest')
             ->with(
                 $this->callback(
-                    function (Request $request) {
+                    function (RequestInterface $request) {
                         $body = \json_decode((string)$request->getBody(), true);
                         $this->assertSame("1", $body['message']['data']['true']); // @phpstan-ignore-line
                         $this->assertSame("", $body['message']['data']['false']); // @phpstan-ignore-line
@@ -47,7 +49,7 @@ final class CloudMessagingTest extends AbstractTestCase
             ]
         );
 
-        $cloudMessaging = new CloudMessaging($client, $provider);
+        $cloudMessaging = new CloudMessaging($client, new HttpFactory(), $provider);
         $cloudMessaging->send('project-xyz', 'token', $notification);
     }
 
@@ -60,21 +62,20 @@ final class CloudMessagingTest extends AbstractTestCase
             ->method('__invoke')
             ->willReturn('Bearer test');
 
+        $httpFactory = new HttpFactory();
         $client = $this->createMock(ClientInterface::class);
         $client
-            ->method('send')
+            ->method('sendRequest')
             ->willReturnCallback(
-                function (Request $request) {
-                    throw new ClientException(
-                        'Forbidden',
-                        $request,
-                        new Response(403)
-                    );
-                }
+                fn () => new Response(
+                    403,
+                    ['Content-Type' => 'application/json'],
+                    $httpFactory->createStream((string)\json_encode(['error' => ['message' => 'Forbidden']]))
+                )
             );
 
         $notification = new Notification('body', 'title');
-        $cloudMessaging = new CloudMessaging($client, $provider);
+        $cloudMessaging = new CloudMessaging($client, $httpFactory, $provider);
 
         $cloudMessaging->send('project-xyz', 'token', $notification);
     }

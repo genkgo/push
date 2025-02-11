@@ -3,41 +3,24 @@ declare(strict_types=1);
 
 namespace Genkgo\Push\Firebase;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Psr7\Request;
-use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInterface
+final readonly class OauthBearerTokenProvider implements AuthorizationHeaderProviderInterface
 {
-    private const AUTH_ENDPOINT = 'https://www.googleapis.com/oauth2/v4/token';
+    private const string AUTH_ENDPOINT = 'https://www.googleapis.com/oauth2/v4/token';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $serviceAccountFile;
-
-    /**
-     * @param ClientInterface $client
-     * @param string $serviceAccountFile
-     */
-    public function __construct(ClientInterface $client, string $serviceAccountFile)
-    {
-        $this->client = $client;
-        $this->serviceAccountFile = $serviceAccountFile;
+    public function __construct(
+        private ClientInterface $client,
+        private RequestFactoryInterface&StreamFactoryInterface $requestFactory,
+        private string $serviceAccountFile
+    ) {
     }
 
-    /**
-     * @return string
-     */
     public function __invoke(): string
     {
         $serviceAccount = \file_get_contents($this->serviceAccountFile);
@@ -45,13 +28,10 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
             throw new \UnexpectedValueException('Cannot read service account ' . $this->serviceAccountFile);
         }
 
+        /** @var array{private_key: non-empty-string, client_email: non-empty-string}|false $googleJson */
         $googleJson = \json_decode($serviceAccount, true);
-        if (!$googleJson || !\is_array($googleJson)) {
+        if (!$googleJson) {
             throw new \UnexpectedValueException('Invalid service account file ' . $this->serviceAccountFile . ' passed, cannot decode json.');
-        }
-
-        if (!\array_key_exists('private_key', $googleJson)) {
-            throw new \UnexpectedValueException('Expecting key `private_key` in service account.');
         }
 
         $configuration = Configuration::forSymmetricSigner(
@@ -70,27 +50,30 @@ final class OauthBearerTokenProvider implements AuthorizationHeaderProviderInter
             ->permittedFor(self::AUTH_ENDPOINT);
 
         $authResponse = (string)$this->client
-            ->send(
-                new Request(
+            ->sendRequest(
+                $this->requestFactory->createRequest(
                     'POST',
                     self::AUTH_ENDPOINT,
-                    [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                    ],
-                    \http_build_query([
-                        'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                        'assertion' => $builder->getToken(
-                            $configuration->signer(),
-                            $configuration->signingKey()
-                        )->toString()
-                    ])
                 )
+                    ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+                    ->withBody(
+                        $this->requestFactory->createStream(
+                            \http_build_query([
+                                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                                'assertion' => $builder->getToken(
+                                    $configuration->signer(),
+                                    $configuration->signingKey()
+                                )->toString()
+                            ])
+                        )
+                    )
             )
             ->getBody();
 
+        /** @var array{access_token: non-empty-string}|false $authTokens */
         $authTokens = \json_decode($authResponse, true);
 
-        if (!$authTokens || !\is_array($authTokens) || !\array_key_exists('private_key', $authTokens)) {
+        if (!$authTokens) {
             throw new \UnexpectedValueException('Expecting key `access_token` from Oauth request.');
         }
 

@@ -5,52 +5,27 @@ namespace Genkgo\Push\Apn;
 
 use Apple\ApnPush\Protocol\Http\Authenticator\AuthenticatorInterface;
 use Apple\ApnPush\Protocol\Http\Request;
-use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Ecdsa\MultibyteStringConverter;
 use Lcobucci\JWT\Signer\Ecdsa\Sha256;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 
 final class JwtAuthenticator implements AuthenticatorInterface
 {
-    /**
-     * @var string
-     */
-    private $token;
+    /** @var \Iterator<int, Token>  */
+    private \Iterator $tokenGenerator;
 
-    /**
-     * @var string
-     */
-    private $keyId;
-
-    /**
-     * @var string
-     */
-    private $teamId;
-
-    /**
-     * @var string
-     */
-    private $refreshAfter;
-
-    /**
-     * @var \Iterator<int, Token>
-     */
-    private $tokenGenerator;
-
-    /**
-     * @param string $token
-     * @param string $keyId
-     * @param string $teamId
-     * @param string $refreshAfter
-     */
-    public function __construct(string $token, string $keyId, string $teamId, string $refreshAfter = 'PT30M')
-    {
-        $this->token = $token;
-        $this->keyId = $keyId;
-        $this->teamId = $teamId;
-        $this->refreshAfter = $refreshAfter;
+    public function __construct(
+        /** @var non-empty-string */
+        private readonly string $token,
+        /** @var non-empty-string */
+        private readonly string $keyId,
+        /** @var non-empty-string */
+        private readonly string $teamId,
+        /** @var non-empty-string */
+        private readonly string $refreshAfter = 'PT30M'
+    ) {
         $this->tokenGenerator = $this->newGenerator();
     }
 
@@ -71,8 +46,9 @@ final class JwtAuthenticator implements AuthenticatorInterface
                 throw new \UnexpectedValueException('Cannot fetch token content from ' . $this->token . ', empty file');
             }
 
+            // support both lcobucci/jwt 4 and 5
             $configuration = Configuration::forSymmetricSigner(
-                Sha256::create(),
+                new Sha256(new MultibyteStringConverter()),
                 InMemory::plainText($keyContent)
             );
 

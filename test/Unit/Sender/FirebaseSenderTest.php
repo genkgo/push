@@ -11,7 +11,10 @@ use Genkgo\Push\Message;
 use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 use Genkgo\Push\Recipient\FirebaseRecipient;
 use Genkgo\Push\Sender\FirebaseSender;
-use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\HttpFactory;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class FirebaseSenderTest extends AbstractTestCase
 {
@@ -23,7 +26,7 @@ final class FirebaseSenderTest extends AbstractTestCase
         $client = $this->createMock(ClientInterface::class);
         $authorization = $this->createMock(AuthorizationHeaderProviderInterface::class);
 
-        $sender = new FirebaseSender(new CloudMessaging($client, $authorization), '1234');
+        $sender = new FirebaseSender(new CloudMessaging($client, new HttpFactory(), $authorization), '1234');
         $this->assertTrue($sender->supports($message, $recipient));
     }
 
@@ -35,7 +38,7 @@ final class FirebaseSenderTest extends AbstractTestCase
         $client = $this->createMock(ClientInterface::class);
         $authorization = $this->createMock(AuthorizationHeaderProviderInterface::class);
 
-        $sender = new FirebaseSender(new CloudMessaging($client, $authorization), '1234');
+        $sender = new FirebaseSender(new CloudMessaging($client, new HttpFactory(), $authorization), '1234');
         $this->assertFalse($sender->supports($message, $recipient));
     }
 }

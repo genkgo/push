@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Genkgo\Push\Sender;
 
 use Apple\ApnPush\Certificate\Certificate;
+use Apple\ApnPush\Exception\CertificateFileNotFoundException;
 use Apple\ApnPush\Exception\SendNotification\BadCertificateEnvironmentException;
 use Apple\ApnPush\Exception\SendNotification\BadCertificateException;
 use Apple\ApnPush\Exception\SendNotification\BadDeviceTokenException;
@@ -23,6 +24,7 @@ use Apple\ApnPush\Exception\SendNotification\MissingDeviceTokenException;
 use Apple\ApnPush\Exception\SendNotification\MissingProviderTokenException;
 use Apple\ApnPush\Exception\SendNotification\MissingTopicException;
 use Apple\ApnPush\Exception\SendNotification\PayloadEmptyException;
+use Apple\ApnPush\Exception\SendNotification\SendNotificationException;
 use Apple\ApnPush\Exception\SendNotification\TopicDisallowedException;
 use Apple\ApnPush\Exception\SendNotification\UndefinedErrorException;
 use Apple\ApnPush\Exception\SendNotification\UnregisteredException;
@@ -46,48 +48,28 @@ use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\RecipientInterface;
 use Genkgo\Push\SenderInterface;
 
-final class AppleApnSender implements SenderInterface
+final readonly class AppleApnSender implements SenderInterface
 {
-    /**
-     * @var AppleSender
-     */
-    private $sender;
-
-    /**
-     * @var string
-     */
-    private $bundleId;
-
-    /**
-     * @var bool
-     */
-    private $sandbox;
-
-    /**
-     * @param AppleSender $sender
-     * @param string $bundleId
-     * @param bool $sandbox
-     */
-    public function __construct(AppleSender $sender, string $bundleId, bool $sandbox = false)
-    {
-        $this->sender = $sender;
-        $this->sandbox = $sandbox;
-        $this->bundleId = $bundleId;
+    public function __construct(
+        private AppleSender $sender,
+        private string $bundleId,
+        private bool $sandbox = false
+    ) {
     }
 
-    /**
-     * @param Message $message
-     * @param RecipientInterface $recipient
-     * @return bool
-     */
     public function supports(Message $message, RecipientInterface $recipient): bool
     {
         return $recipient instanceof AppleDeviceRecipient;
     }
 
     /**
-     * @param Message $message
-     * @param RecipientInterface|AppleDeviceRecipient $recipient
+     * @param RecipientInterface&AppleDeviceRecipient $recipient
+     * @throws ConnectionException
+     * @throws ForbiddenToSendMessageException
+     * @throws InvalidMessageException
+     * @throws InvalidRecipientException
+     * @throws UnknownRecipientException
+     * @throws SendNotificationException
      * @codeCoverageIgnore
      */
     public function send(Message $message, RecipientInterface $recipient): void
@@ -159,10 +141,7 @@ final class AppleApnSender implements SenderInterface
     }
 
     /**
-     * @param string $certificate
-     * @param string $passphrase
-     * @param bool $sandboxMode
-     * @return AppleApnSender
+     * @throws CertificateFileNotFoundException
      */
     public static function fromCertificate(string $certificate, string $passphrase, bool $sandboxMode = false): self
     {
@@ -176,12 +155,10 @@ final class AppleApnSender implements SenderInterface
     }
 
     /**
-     * @param string $token
-     * @param string $keyId
-     * @param string $teamId
-     * @param string $bundleId
-     * @param bool $sandboxMode
-     * @return AppleApnSender
+     * @param non-empty-string $token
+     * @param non-empty-string $keyId
+     * @param non-empty-string $teamId
+     * @param non-empty-string $bundleId
      */
     public static function fromToken(
         string $token,

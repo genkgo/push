@@ -3,53 +3,30 @@ declare(strict_types=1);
 
 namespace Genkgo\Push\Firebase;
 
-final class Notification
+final readonly class Notification
 {
     /**
-     * @var string
+     * @param array<int|string, string|int|float|bool|array<int|string, string|int|float|bool>> $data
      */
-    private $body;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var array<string|int, mixed>
-     */
-    private $data;
-
-    /**
-     * @param string $body
-     * @param string $title
-     * @param array<string|int, mixed> $data
-     */
-    public function __construct(string $body, string $title, array $data = [])
-    {
-        $this->body = $body;
-        $this->title = $title;
-        $this->data = $data;
+    public function __construct(
+        private string $body,
+        private string $title,
+        private array $data = []
+    ) {
     }
 
-    /**
-     * @return string
-     */
     public function getBody(): string
     {
         return $this->body;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
-     * @return array<string|int, mixed>
+     * @return array<int|string, string|int|float|bool|array<int|string, string|int|float|bool>>
      */
     public function getData(): array
     {

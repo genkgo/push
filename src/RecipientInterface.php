@@ -5,14 +5,7 @@ namespace Genkgo\Push;
 
 interface RecipientInterface
 {
-    /**
-     * @return string
-     */
     public function getToken(): string;
 
-    /**
-     * @param string $token
-     * @return RecipientInterface
-     */
-    public static function fromString(string $token): RecipientInterface;
+    public static function fromString(string $token): self;
 }

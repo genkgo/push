@@ -5,24 +5,16 @@ namespace Genkgo\Push;
 
 use Genkgo\Push\Exception\UnsupportedMessageRecipient;
 
-final class Gateway
+final readonly class Gateway
 {
     /**
-     * @var array|SenderInterface[]
+     * @param array<int|string, SenderInterface> $senders
      */
-    private $senders = [];
-
-    /**
-     * @param array|SenderInterface[] $senders
-     */
-    public function __construct(array $senders)
+    public function __construct(private array $senders)
     {
-        $this->senders = $senders;
     }
 
     /**
-     * @param Message $message
-     * @param RecipientInterface $recipient
      * @throws Exception\ForbiddenToSendMessageException
      * @throws Exception\InvalidMessageException
      * @throws Exception\InvalidRecipientException
@@ -38,7 +30,7 @@ final class Gateway
             }
         }
 
-        $recipientClass = \get_class($recipient);
+        $recipientClass = $recipient::class;
         throw new UnsupportedMessageRecipient(
             "Could not find a sender that supports the combination of message and recipient ({$recipientClass})"
         );
