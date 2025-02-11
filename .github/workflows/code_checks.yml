@@ -32,4 +32,4 @@ jobs:
       - name: Static analysis for tests
         run: ./vendor/bin/phpstan analyse -l max test
       - name: Code Style
-        run: ./vendor/bin/php-cs-fixer fix --dry-run --verbose --config .php-cs-fixer.dist.php ./src ./test
+        run: PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --dry-run --verbose --config .php-cs-fixer.dist.php ./src ./test
