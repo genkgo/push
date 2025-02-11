@@ -3,7 +3,7 @@ Send push messages to Android, Apple and Firebase using one interface
 
 ### Installation
 
-Requires PHP 7.4 or later. It is installable and autoloadable via Composer as [genkgo/push](https://packagist.org/packages/genkgo/push).
+Requires a [PHP version getting security updates](https://www.php.net/supported-versions.php). It is installable and autoloadable via Composer as [genkgo/push](https://packagist.org/packages/genkgo/push).
 
 ### Quality
 
