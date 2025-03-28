@@ -5,5 +5,5 @@ namespace Genkgo\Push\Firebase;
 
 interface AuthorizationHeaderProviderInterface
 {
-    public function __invoke(): string;
+    public function providerHeaderValue(string $scope = 'https://www.googleapis.com/auth/cloud-platform'): string;
 }

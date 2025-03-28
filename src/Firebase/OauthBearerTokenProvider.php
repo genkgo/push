@@ -21,7 +21,7 @@ final readonly class OauthBearerTokenProvider implements AuthorizationHeaderProv
     ) {
     }
 
-    public function __invoke(): string
+    public function providerHeaderValue(string $scope = 'https://www.googleapis.com/auth/cloud-platform'): string
     {
         $serviceAccount = \file_get_contents($this->serviceAccountFile);
         if ($serviceAccount === false) {
@@ -46,7 +46,7 @@ final readonly class OauthBearerTokenProvider implements AuthorizationHeaderProv
             ->issuedBy($googleJson['client_email'])
             ->issuedAt($now)
             ->expiresAt($expiration)
-            ->withClaim('scope', 'https://www.googleapis.com/auth/cloud-platform')
+            ->withClaim('scope', $scope)
             ->permittedFor(self::AUTH_ENDPOINT);
 
         $authResponse = (string)$this->client

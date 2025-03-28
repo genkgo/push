@@ -11,9 +11,7 @@ use Genkgo\Push\Firebase\Notification;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 final class CloudMessagingTest extends AbstractTestCase
 {
@@ -21,7 +19,7 @@ final class CloudMessagingTest extends AbstractTestCase
     {
         $provider = $this->createMock(AuthorizationHeaderProviderInterface::class);
         $provider
-            ->method('__invoke')
+            ->method('providerHeaderValue')
             ->willReturn('Bearer test');
 
         $client = $this->createMock(ClientInterface::class);
@@ -59,7 +57,7 @@ final class CloudMessagingTest extends AbstractTestCase
 
         $provider = $this->createMock(AuthorizationHeaderProviderInterface::class);
         $provider
-            ->method('__invoke')
+            ->method('providerHeaderValue')
             ->willReturn('Bearer test');
 
         $httpFactory = new HttpFactory();

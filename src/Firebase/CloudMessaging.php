@@ -34,7 +34,7 @@ final readonly class CloudMessaging
      */
     public function send(string $projectId, string $token, Notification $notification): void
     {
-        $authorizationHeader = \call_user_func($this->authorizationHeaderProvider);
+        $authorizationHeader = $this->authorizationHeaderProvider->providerHeaderValue();
 
         $json = \json_encode([
             'message' => [
