@@ -13,8 +13,6 @@ use Genkgo\Push\Recipient\FirebaseRecipient;
 use Genkgo\Push\Sender\FirebaseSender;
 use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 final class FirebaseSenderTest extends AbstractTestCase
 {

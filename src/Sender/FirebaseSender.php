@@ -47,7 +47,7 @@ final readonly class FirebaseSender implements SenderInterface
     {
         $this->cloudMessaging->send(
             $this->projectId,
-            $recipient->getToken(),
+            $recipient->get('token'),
             new Notification(
                 (string)$message->getBody(),
                 (string)$message->getTitle(),

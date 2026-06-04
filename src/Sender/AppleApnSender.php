@@ -86,7 +86,7 @@ final readonly class AppleApnSender implements SenderInterface
         $notification = new Notification($payload);
 
         try {
-            $receiver = new Receiver(new DeviceToken($recipient->getToken()), $this->bundleId);
+            $receiver = new Receiver(new DeviceToken($recipient->get('token')), $this->bundleId);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidRecipientException($e->getMessage(), $e->getCode(), $e);
         }

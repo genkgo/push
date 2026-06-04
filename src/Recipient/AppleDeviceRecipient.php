@@ -11,8 +11,12 @@ final readonly class AppleDeviceRecipient implements RecipientInterface
     {
     }
 
-    public function getToken(): string
+    public function get(string $key): string
     {
+        if ($key !== 'token') {
+            throw new \InvalidArgumentException('key should be "token"');
+        }
+
         return $this->token;
     }
 

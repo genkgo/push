@@ -11,7 +11,7 @@ final class AppleDeviceRecipientTest extends AbstractTestCase
     public function testToken(): void
     {
         $recipient = new AppleDeviceRecipient('test');
-        $this->assertEquals('test', $recipient->getToken());
+        $this->assertEquals('test', $recipient->get('token'));
     }
 
     public function testFromString(): void
