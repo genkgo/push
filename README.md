@@ -48,7 +48,6 @@ $gateway = new Gateway([
 ]);
 
 // below message will automatically go to their own specific sender
-$gateway->send(new Message(new Body('message content')), new AndroidDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new AppleDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new FirebaseRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new WebRecipient('https://endpoint', 'keys.auth', 'keys.p256dh'));
