@@ -4,6 +4,7 @@
     "require" : {
         "php": "~8.3.0 || ~8.4.0",
         "ext-json" : "*",
+        "ext-openssl" : "*",
         "apple/apn-push": "^v3.1.7",
         "lcobucci/jwt": "^4.1.4 || ^5.5.0",
         "psr/http-client": "^1.0",

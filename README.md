@@ -1,5 +1,5 @@
 # Genkgo.Push
-Send push messages to Android, Apple and Firebase using one interface
+Send push messages to Apple, Firebase and Web Push using one interface.
 
 ### Installation
 
@@ -25,24 +25,33 @@ you notice compliance oversights, please send a patch via pull request.
 <?php
 use Genkgo\Push\Body;
 use Genkgo\Push\Firebase\CloudMessaging;
+use Genkgo\Push\Firebase\OauthBearerTokenProvider;
 use Genkgo\Push\Gateway;
 use Genkgo\Push\Message;
 use Genkgo\Push\Sender\FirebaseSender;
 use Genkgo\Push\Sender\AppleApnSender;
+use Genkgo\Push\Sender\WebPushSender;
 use Genkgo\Push\Recipient\AndroidDeviceRecipient;
 use Genkgo\Push\Recipient\AppleDeviceRecipient;
 use Genkgo\Push\Recipient\FirebaseRecipient;
+use Genkgo\Push\Recipient\WebRecipient;
+use Genkgo\Push\WebPush\PayloadEncryption;
+
+// firebase oauth token
+$auth = new OauthBearerTokenProvider($guzzleClient, $guzzleHttpFactory, '/link/to/services-account.json');
 
 // construct the gateway, using the different senders
 $gateway = new Gateway([
     AppleApnSender::fromToken('/location/to/key.p8', 'keyId', 'teamId', 'bundleId'),
-    new FirebaseSender(new CloudMessaging($guzzleClient, $auth), 'fcm-project-id')
+    new FirebaseSender(new CloudMessaging($guzzleClient, $guzzleHttpFactory, $auth), 'fcm-project-id'),
+    new WebPushSender($guzzleClient, $guzzleHttpFactory, new PayloadEncryption(), '/link/to/private-key.pem', '/link/to/public-key.pem', 'mailto:address@domain.com'),
 ]);
 
 // below message will automatically go to their own specific sender
 $gateway->send(new Message(new Body('message content')), new AndroidDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new AppleDeviceRecipient('token'));
 $gateway->send(new Message(new Body('message content')), new FirebaseRecipient('token'));
+$gateway->send(new Message(new Body('message content')), new WebRecipient('https://endpoint', 'keys.auth', 'keys.p256dh'));
 ```
 
 ## Contributing
