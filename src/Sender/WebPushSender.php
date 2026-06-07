@@ -9,7 +9,6 @@ use Genkgo\Push\Exception\InvalidRecipientException;
 use Genkgo\Push\Exception\UnknownErrorException;
 use Genkgo\Push\Exception\UnknownRecipientException;
 use Genkgo\Push\Message;
-use Genkgo\Push\Recipient\FirebaseRecipient;
 use Genkgo\Push\Recipient\WebRecipient;
 use Genkgo\Push\RecipientInterface;
 use Genkgo\Push\SenderInterface;
@@ -47,7 +46,7 @@ final readonly class WebPushSender implements SenderInterface
      */
     public function supports(Message $message, RecipientInterface $recipient): bool
     {
-        return $recipient instanceof FirebaseRecipient;
+        return $recipient instanceof WebRecipient;
     }
 
     /**
