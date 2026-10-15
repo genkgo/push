@@ -46,6 +46,7 @@ final class PayloadEncryption
         $key = \hash_hkdf('sha256', $ikm, 16, 'Content-Encoding: aes128gcm' . \chr(0), $salt);
         $nonce = \hash_hkdf('sha256', $ikm, 12, 'Content-Encoding: nonce' . \chr(0), $salt);
 
+        $tag = null;
         $ciphertext = \openssl_encrypt($json . \chr(2), 'aes-128-gcm', $key, OPENSSL_RAW_DATA, $nonce, $tag);
         $header = $salt . \pack('N', 4096) . \chr(65) . $ephemeralPublicKeySec1;
         return $header . $ciphertext . $tag;
