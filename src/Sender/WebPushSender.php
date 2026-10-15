@@ -85,6 +85,16 @@ final readonly class WebPushSender implements SenderInterface
                 $config->signingKey()
             );
 
+        $payload = [
+            'title' => (string)$message->getTitle(),
+            'body'  => (string)$message->getBody(),
+            'data' => $message->getExtra(),
+        ];
+
+        if ($navigate = $message->getNavigate()) {
+            $payload['navigate'] = $navigate;
+        }
+
         $response = $this->client->sendRequest(
             $this->requestFactory
                 ->createRequest('POST', $recipient->get('endpoint'))
@@ -102,11 +112,7 @@ final readonly class WebPushSender implements SenderInterface
                 ->withBody(
                     $this->requestFactory->createStream(
                         $this->payloadEncryption->encrypt(
-                            [
-                                'title' => (string)$message->getTitle(),
-                                'body'  => (string)$message->getBody(),
-                                'data' => $message->getExtra(),
-                            ],
+                            $payload,
                             $recipient
                         )
                     )

@@ -7,12 +7,15 @@ final class Message
 {
     private Title $title;
 
+    private ?string $navigate;
+
     /** @var array<int|string, string|int|float|bool|array<int|string, string|int|float|bool>> */
     private array $extra;
 
     public function __construct(private readonly Body $body)
     {
         $this->title = new Title('');
+        $this->navigate = null;
         $this->extra = [];
     }
 
@@ -26,6 +29,11 @@ final class Message
         return $this->title;
     }
 
+    public function getNavigate(): ?string
+    {
+        return $this->navigate;
+    }
+
     /**
      * @return array<int|string, string|int|float|bool|array<int|string, string|int|float|bool>>
      */
@@ -34,10 +42,6 @@ final class Message
         return $this->extra;
     }
 
-    /**
-     * @param Title $title
-     * @return Message
-     */
     public function withTitle(Title $title): self
     {
         $clone = clone $this;
@@ -52,6 +56,13 @@ final class Message
     {
         $clone = clone $this;
         $clone->extra[$key] = $value;
+        return $clone;
+    }
+
+    public function withNavigate(string $url): self
+    {
+        $clone = clone $this;
+        $clone->navigate = $url;
         return $clone;
     }
 }
